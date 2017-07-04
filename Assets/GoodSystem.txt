@@ -1,0 +1,44 @@
+# First level layout
+* 10 MIRROR T
+* 10 REPEAT T 1 3
+* 80 SPLIT S T
+# Second level layout
+T 30 SPLIT S H
+T 30 REPEAT H 1 2
+T 40 MIRROR H
+# Panel component
+H 50 Y
+H 25 B
+H 25 <
+# Divider component
+# Regular window
+S 30 Y
+# Regular Border window 2
+# Extruded column
+S 40 BORDER E 0 0 30 40
+S 10 P
+# Horizontal window sill
+S 20 BORDER W 10 20 0 0
+#
+# Extruded Panel
+E 100 EXTRUDE P 5 20
+, 100 EXTRUDE B -30 -10
+. 100 EXTRUDE < -5 -2
+P 100 PANEL
+# Slightly Bordered Sill-less Window
+B 50 BORDER < 10 10 10 10
+B 50 BORDER W 10 25 10 25
+# Borders with extruded windows
+Y 100 BORDER . 10 25 10 25
+# Regular Window with possible sill
+W 100 WINDOW 2 2 1
+# Window with no sill
+< 100 WINDOW 0 2 1
+# DOOR STUFF
+D 50 BORDER F 0 0 20 25
+D 25 BORDER M 0 0 20 25
+D 25 BORDER M 5 5 20 25
+M 50 EXTRUDE N -5 -3
+M 50 EXTRUDE F -5 -2 
+F 100 DOOR
+N 100 BORDER F 5 5 5 10
