@@ -31,3 +31,4 @@ sysinfo.txt
 *.unitypackage
 .DS_STORE
 desktop.ini
+ProjectSettings/ProjectVersion.txt
