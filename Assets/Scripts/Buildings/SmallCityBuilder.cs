@@ -8,9 +8,11 @@ public class SmallCityBuilder : MonoBehaviour {
     public BuildingTextureAtlas atlas;
 
     public Material footpath;
+    public GameObject item;
 
-    public Color building = Color.black;
-    public Color road = Color.white;
+    public Color buildingColour = Color.black;
+    public Color roadColour = Color.white;
+    public Color itemColour = Color.green;
 
     private Color[] pixels;
 
@@ -18,14 +20,19 @@ public class SmallCityBuilder : MonoBehaviour {
         DestroyChildren();
         Debug.Log("Reading map. " + map.width + " " + map.height);
         pixels = map.GetPixels();
-        for(int i = 0; i < map.width; i++)
-        {
-            for(int j = 0; j < map.height; j++)
-            {
-                if(ColorAt(i, j).r == 0)
-                {
-                    CreateBuildingAt(i, j, DirsForPixel(i, j));
 
+        GameObject buildings = new GameObject("Buildings");
+        buildings.transform.parent = transform;
+        GameObject items = new GameObject("Items");
+        items.transform.parent = transform;
+        for(int i = 0; i < map.width; i++){
+            for(int j = 0; j < map.height; j++){
+                if(ColorAt(i, j) == buildingColour){
+                    CreateBuildingAt(i, j, DirsForPixel(i, j), buildings.transform);
+                } else if(ColorAt(i, j) == itemColour) {
+                    GameObject newItem = Instantiate(item);
+                    newItem.transform.position = new Vector3(i * scale + scale / 2f, 1, j * scale + scale / 2f);
+                    newItem.transform.parent = items.transform;
                 }
             }
         }
@@ -36,7 +43,7 @@ public class SmallCityBuilder : MonoBehaviour {
         return pixels[(x * map.width) + y];
     }
 
-    private void CreateBuildingAt(float x, float y, Directions dirs)
+    private void CreateBuildingAt(float x, float y, Directions dirs, Transform parent)
     {
         List<Vector3> floorplan = MathUtility.InstructionsToPoints(
             new List<Vector3>()
@@ -62,7 +69,7 @@ public class SmallCityBuilder : MonoBehaviour {
         bc.size = b.size;
         bc.center = b.center;
 
-        building.transform.parent = transform;
+        building.transform.parent = parent;
 
         // Create surrounding footpath
         List<Vector3> points = dirs.FloorplanForBuilding(x, y, scale, scale / 8f);
@@ -87,10 +94,10 @@ public class SmallCityBuilder : MonoBehaviour {
     private Directions DirsForPixel(int x, int y) {
         // TODO change .r != 0 to something about non-building
         return new Directions(
-                y + 1 < map.height && ColorAt(x, y + 1).r != 0,
-                y - 1 > 0 && ColorAt(x, y - 1).r != 0,
-                x - 1 > 0 && ColorAt(x - 1, y).r != 0,
-                x + 1 < map.width && ColorAt(x + 1, y).r != 0
+                y + 1 < map.height && ColorAt(x, y + 1) != buildingColour,
+                y - 1 > 0 && ColorAt(x, y - 1) != buildingColour,
+                x - 1 > 0 && ColorAt(x - 1, y) != buildingColour,
+                x + 1 < map.width && ColorAt(x + 1, y) != buildingColour
             );
     }
 
