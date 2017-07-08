@@ -6,21 +6,28 @@ public class AnalyticsController : MonoBehaviour {
 
     AnalyticModule[] modules;
 
+    private bool tracking = false;
+
     void Start() {
         modules = gameObject.GetComponents<AnalyticModule>();
-        StartTracking();
     }
 
     public void StartTracking() {
+        tracking = true;
         foreach(AnalyticModule mod in modules) {
             mod.StartTracking();
         }
     }
 
      public void StopTracking() {
+        tracking = false;
         foreach(AnalyticModule mod in modules) {
             mod.StopTracking();
         }
+    }
+
+    public bool Tracking() {
+        return tracking;
     }
 
     public string[] Names() {
@@ -40,8 +47,8 @@ public class AnalyticsController : MonoBehaviour {
     }
 
     void Update() {
-        foreach(AnalyticModule mod in modules) {
-            Debug.Log(mod.AnalyticName() + " " + mod.AnalyticValue());
-        }
+        //foreach(AnalyticModule mod in modules) {
+        //    Debug.Log(mod.AnalyticName() + " " + mod.AnalyticValue());
+        //}
     }
 }

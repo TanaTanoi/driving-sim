@@ -17,15 +17,15 @@ public class DisplacementModule : AnalyticModule {
 
 	// Use this for initialization
 	void Start () {
-		if(target == null) {
-            throw new System.Exception("This module requires a target!");
-        }
         positions = new List<Vector3>();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		if(tracking) {
+            if(target == null) {
+                throw new System.Exception("This module requires a target!");
+            }
             Vector3 current = target.transform.position;
             Vector3 last = positions[positions.Count - 1];
             float distance = (current - last).magnitude;
@@ -38,9 +38,15 @@ public class DisplacementModule : AnalyticModule {
 	}
     
     void Update() {
-        for(int i = 0; i < positions.Count - 1; i++) {
-            Debug.DrawLine(positions[i], positions[i + 1], Color.red);
+        if(tracking) {
+            for(int i = 0; i < positions.Count - 1; i++) {
+                Debug.DrawLine(positions[i], positions[i + 1], Color.red);
+            }
         }
+    }
+
+    public void SetTarget(GameObject target) {
+        this.target = target;
     }
 
     public override void StartTracking() {
