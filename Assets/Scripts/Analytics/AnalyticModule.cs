@@ -4,15 +4,7 @@ using UnityEngine;
 
 public abstract class AnalyticModule : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public const string DATA_SEPERATOR = ", ";
 
     // Tells the module to begin keeping track of what it wants
     public abstract void StartTracking();

@@ -46,6 +46,14 @@ public class AnalyticsController : MonoBehaviour {
         return values;
     }
 
+    public string[] Data() {
+        string[] data = new string[modules.Length];
+        for(int i = 0; i < modules.Length; i++) {
+            data[i] = modules[i].AnalyticData();
+        }
+        return data;
+    }
+
     void Update() {
         //foreach(AnalyticModule mod in modules) {
         //    Debug.Log(mod.AnalyticName() + " " + mod.AnalyticValue());

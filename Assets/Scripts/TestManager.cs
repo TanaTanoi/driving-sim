@@ -14,16 +14,19 @@ public class TestManager : MonoBehaviour {
 
 
     public Canvas startMenu;
+    public Canvas resultsMenu;
     public Transform startPosition; // DEBUG - GET BETTER SYSTEM FOR THIS
     public GameObject carPrefab;
     public AnalyticsController analytics;
+
+    private GameObject car;
 
     // CONTEXT IDS: 0 HMD, 1 CAVE, 2 SINGLE
     private int context = VRContext.SINGLE;
 
 	// Use this for initialization
 	void Start () {
-		
+        ShowMainMenu();
 	}
 	
 	// Update is called once per frame
@@ -35,12 +38,17 @@ public class TestManager : MonoBehaviour {
         context = contextID.value;
     }
 
+    public void ShowMainMenu() {
+        startMenu.gameObject.SetActive(true);
+        resultsMenu.gameObject.SetActive(false);
+    }
+
     public void StartTest() {
         // Hide menu
         startMenu.gameObject.SetActive(false);
 
         // Create car with correct context
-        GameObject car = Instantiate(carPrefab);
+        car = Instantiate(carPrefab);
         car.transform.position = startPosition.position;
         VRCameraPod cameras = car.GetComponentInChildren<VRCameraPod>();
         if(context == VRContext.SINGLE) {
@@ -59,5 +67,39 @@ public class TestManager : MonoBehaviour {
 
         // Start analytics
         analytics.StartTracking();
+    }
+
+    // Stops tracking, destroys the car, and displays the results menu
+    public void EndTest() {
+        analytics.StopTracking();
+        Destroy(car);
+        resultsMenu.gameObject.SetActive(true);
+    }
+
+    public void SaveResults(InputField input) {
+        string filename = FilenameFor(input.text);
+        WriteToFile(filename, analytics.Data());
+    }
+
+
+    // Returns the full filename for a given name in the format:
+    //  results_name_yyyy_MM_dd_HH_mm.txt 
+    private string FilenameFor(string name) {
+        if(name.Length == 0) {
+            name = "unlabelled";
+        }
+        name = name.Replace(' ', '_');
+        return "results_" + name + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_HH_mm") + ".txt";
+    }
+
+    // Writes contents to a file. Returns false if it failed
+    private bool WriteToFile(string filename, string[] content) {
+        try {
+            System.IO.File.WriteAllLines(filename, content);
+        } catch( System.IO.IOException e) {
+            Debug.Log("Error - Could not write: " + e);
+            return false;
+        }
+        return true;
     }
 }
