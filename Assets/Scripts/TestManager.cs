@@ -47,6 +47,22 @@ public class TestManager : MonoBehaviour {
         // Hide menu
         startMenu.gameObject.SetActive(false);
 
+        SetupCar();
+        SetupModuleVariables();
+
+        Countdown cd = car.GetComponentInChildren<Countdown>();
+        cd.StartCountdown(3, EnableControl);
+    }
+
+    public void EnableControl() {
+        // TODO rework
+        UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
+        controller.enabled = true;
+
+        analytics.StartTracking();
+    }
+
+    private void SetupCar() {
         // Create car with correct context
         car = Instantiate(carPrefab);
         car.transform.position = startPosition.position;
@@ -59,14 +75,19 @@ public class TestManager : MonoBehaviour {
             cameras.SetCaveCameras();
         }
 
+        // TODO rework
+        UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
+        controller.enabled = false;
+    }
+
+    // Sets up any modules with additional requirements (e.g. DisplacementModule needs a target)
+    private void SetupModuleVariables() {
+        
         // Ensure modules have required stuff, if equipt
         DisplacementModule dm = analytics.gameObject.GetComponent<DisplacementModule>();
         if(dm != null) {
             dm.SetTarget(car);
         }
-
-        // Start analytics
-        analytics.StartTracking();
     }
 
     // Stops tracking, destroys the car, and displays the results menu
