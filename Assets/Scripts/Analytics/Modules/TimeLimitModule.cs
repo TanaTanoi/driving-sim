@@ -8,6 +8,12 @@ public class TimeLimitModule : TerminationModule {
     public TimeTakenModule timetaken;
     public float timelimit = 200;
 
+    public override string TerminationReason {
+        get {
+            return "Time limit (" + timelimit + " seconds) exceeded";
+        }
+    }
+
     // Use this for initialization
     public new void Start () {
         base.Start();

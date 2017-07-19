@@ -4,18 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemsClearModule : TerminationModule {
-    public int targetItems = 3;
+   [Range(0,100)] public float targetProgress = 50;
 
     private int collectedItems = 0;
-    private int startItems;
+    private int totalItems;
+
+    public override string TerminationReason {
+        get {
+            return "Target percentage ("+ targetProgress +"% of " + totalItems +") of items collected.";
+        }
+    }
 
     public new void Start() {
         base.Start();
-        startItems = FindObjectsOfType<Item>().Length;
-        Debug.Log("Getting this many " + startItems);
+        totalItems = FindObjectsOfType<Item>().Length;
+        Debug.Log("Getting this many " + totalItems);
     }
 
     public override bool TestOver() {
-        return startItems - FindObjectsOfType<Item>().Length >= targetItems;
+        return (float)CollectedItemsCount() / (float)totalItems > (targetProgress / 100f)   ;
+    }
+
+    private int CollectedItemsCount() {
+        return totalItems - FindObjectsOfType<Item>().Length;
     }
 }

@@ -80,7 +80,8 @@ public class TestManager : MonoBehaviour {
     }
 
     // Stops tracking, destroys the car, and displays the results menu
-    public void EndTest() {
+    public void EndTest(string reason = "Unknown Reason.") {
+        Debug.Log("Test terminated for :" + reason);
         analytics.StopTracking();
         Destroy(car);
         resultsMenu.gameObject.SetActive(true);

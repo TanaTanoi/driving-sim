@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class TerminationModule : MonoBehaviour {
 
+    public abstract string TerminationReason { get; }
+
     public TestManager manager;
 
     private AnalyticsController controller;
@@ -23,7 +25,7 @@ public abstract class TerminationModule : MonoBehaviour {
 	}
 
     public void TerminateTest() {
-        manager.EndTest();
+        manager.EndTest(TerminationReason);
     }
 
     public abstract bool TestOver();
