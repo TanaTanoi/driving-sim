@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DisplacementModule : AnalyticModule {
     public GameObject target;
-
     private List<Vector3> positions;
 
     private bool tracking = false;
@@ -32,11 +31,12 @@ public class DisplacementModule : AnalyticModule {
             if(Time.time - time > TIME_DELTA) {
                 distanceTravelled += distance;
                 positions.Add(target.transform.position);
+
                 time += TIME_DELTA;
             }
         }
 	}
-    
+
     void Update() {
         if(tracking) {
             for(int i = 0; i < positions.Count - 1; i++) {
@@ -88,4 +88,11 @@ public class DisplacementModule : AnalyticModule {
         }
         return sb.ToString();
     }
+
+    public List<Vector3> GetPositions() {
+        return positions;
+    }                        
+    public int PositionCount() {
+        return positions.Count;
+    }           
 }

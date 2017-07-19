@@ -11,6 +11,10 @@ public class TimeTakenModule : AnalyticModule {
         startTime = Time.unscaledTime;
     }
 
+    public float CurrentTime() {
+        return Time.unscaledTime - startTime;
+    }
+
     public override void StopTracking() {
         // Nothing to stop tracking
     }
@@ -20,7 +24,7 @@ public class TimeTakenModule : AnalyticModule {
     }
 
     public override string AnalyticValue() {
-        return (Time.unscaledTime - startTime).ToString();
+        return CurrentTime().ToString();
     }
 
     public override string AnalyticData() {

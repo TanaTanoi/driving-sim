@@ -51,7 +51,7 @@ public class TestManager : MonoBehaviour {
         SetupModuleVariables();
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
-        cd.StartCountdown(3, EnableControl);
+        cd.StartCountdown(1, EnableControl);
     }
 
     public void EnableControl() {

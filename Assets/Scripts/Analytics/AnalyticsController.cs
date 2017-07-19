@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnalyticsController : MonoBehaviour {
 
+    public const int OBSERVER_LAYER = 8;
+
     AnalyticModule[] modules;
 
     private bool tracking = false;
