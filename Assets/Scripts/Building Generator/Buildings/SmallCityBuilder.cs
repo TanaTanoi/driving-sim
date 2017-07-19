@@ -30,14 +30,28 @@ public class SmallCityBuilder : MonoBehaviour {
                 if(ColorAt(i, j) == buildingColour){
                     CreateBuildingAt(i, j, DirsForPixel(i, j), buildings.transform);
                 } else if(ColorAt(i, j) == itemColour) {
-                    GameObject newItem = Instantiate(item);
-                    newItem.transform.position = new Vector3(i * scale + scale / 2f, 1, j * scale + scale / 2f);
-                    newItem.transform.parent = items.transform;
+                    PlaceItem(items.transform, i, j);
                 }
             }
         }
         Debug.Log("Finished reading");
     }
+
+    private void PlaceItem(Transform  parent, int x, int y) {
+        GameObject newItem = Instantiate(item);
+        newItem.transform.position = new Vector3(x * scale + scale / 2f, 1, y * scale + scale / 2f);
+        newItem.transform.parent = parent;
+
+        // Allign the arcs of the item
+        // If horizontal buildings
+        if(ColorAt(x - 1, y) == buildingColour && ColorAt(x + 1, y) == buildingColour) {
+            // Do nothing, they are correct by default
+        // If vertical buildings
+        } else if (ColorAt(x, y - 1) == buildingColour && ColorAt(x, y + 1) == buildingColour){
+            newItem.transform.Rotate(Vector3.up, 90);
+        }
+    }
+
 
     private Color ColorAt(int x, int y) {
         return pixels[(x * map.width) + y];

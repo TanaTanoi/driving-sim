@@ -5,21 +5,30 @@ using UnityEngine;
 public class Item : MonoBehaviour {
 
     AudioSource pickupSound;
+    ParticleSystem ps;
+
+    private bool destroy = false;
 
 	// Use this for initialization
 	void Start () {
-        pickupSound = GetComponent<AudioSource>();	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        pickupSound = GetComponent<AudioSource>();
+        ps = GetComponentInChildren<ParticleSystem>();
 	}
 
+    public void FixedUpdate() {
+        if(destroy && ps.particleCount < 10) {
+            Destroy(gameObject, pickupSound.clip.length);
+        }
+    }
+
     public void OnTriggerEnter(Collider other) {
+        ps.Stop();
         pickupSound.Play();
         GetComponent<Renderer>().enabled = false;
         GetComponent<Collider>().enabled = false;
-        Destroy(gameObject, pickupSound.clip.length);
+
+        // Once the particles are removed, the item destroys itself.
+        // Allows a clean disapear.
+        destroy = true;
     }
 }
