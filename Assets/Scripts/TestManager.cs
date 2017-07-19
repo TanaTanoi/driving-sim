@@ -20,41 +20,19 @@ public class TestManager : MonoBehaviour {
 
     private GameObject car;
 
-    // CONTEXT IDS: 0 HMD, 1 CAVE, 2 SINGLE
-    private int context = VRContext.SINGLE;
-
-    private int layout = 0;
-	// Use this for initialization
-	void Start () {
-        ShowMainMenu();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void SetContext(Dropdown contextID) {
-        context = contextID.value;
-    }
-
-    public void SetLayout(Dropdown layoutID) {
-        layout = layoutID.value;
-    }
-
     public void ShowMainMenu() {
         startMenu.gameObject.SetActive(true);
         resultsMenu.gameObject.SetActive(false);
     }
 
     // Sets up the test with analytics and a car, then starts it after a delay
-    public void StartTest() {
+    public void StartTest(int context, int layout) {
         city.BuildCity();
 
         // Hide start menu
         startMenu.gameObject.SetActive(false);
 
-        SetupCar();
+        SetupCar(context);
         SetupAnalytics();
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
@@ -69,7 +47,7 @@ public class TestManager : MonoBehaviour {
         analytics.StartTracking();
     }
 
-    private void SetupCar() {
+    private void SetupCar(int context) {
         // Create car with correct context
         car = Instantiate(carPrefab);
         car.transform.position = city.GetStartPosition();
@@ -80,6 +58,8 @@ public class TestManager : MonoBehaviour {
             cameras.SetVrCameras();
         } else if (context == VRContext.CAVE) {
             cameras.SetCaveCameras();
+        } else {
+            throw new System.Exception("Unknown Context " + context);
         }
 
         // TODO rework
@@ -106,9 +86,10 @@ public class TestManager : MonoBehaviour {
         resultsMenu.gameObject.SetActive(true);
     }
 
-    public void SaveResults(InputField input) {
-        string filename = FilenameFor(input.text);
-        WriteToFile(filename, analytics.Data());
+    // Returns if the write was successful
+    public bool SaveResults(string input) {
+        string filename = FilenameFor(input);
+        return WriteToFile(filename, analytics.Data());
     }
 
 
