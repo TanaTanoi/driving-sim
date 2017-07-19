@@ -7,6 +7,14 @@ public class Countdown : MonoBehaviour {
     // Displayed once the countdown finishes
     public string startString = "GO!";
 
+    private float tickDuration = 0.8f;
+
+    public AudioClip tickSound;
+    public AudioClip goSound;
+
+    private AudioSource tickSource;
+    private AudioSource goSource;
+
     private TextMesh text;
 
     private float shrinkSteps = 60f;
@@ -17,11 +25,32 @@ public class Countdown : MonoBehaviour {
         StartCoroutine(DisplayCountdown(delay, function));
     }
 
-    private IEnumerator DisplayCountdown(int delay, CountdownEvent function) {
+    private void Setup() {
         text = GetComponent<TextMesh>();
+
+        if(tickSound != null) {
+            tickSource = gameObject.AddComponent<AudioSource>();
+            tickSource.clip = tickSound;
+            tickSource.playOnAwake = false;
+        }
+        if(goSound != null) {
+            goSource = gameObject.AddComponent<AudioSource>();
+            goSource.clip = goSound;
+            goSource.playOnAwake = false;
+        }
+    }
+
+    private IEnumerator DisplayCountdown(int delay, CountdownEvent function) {
+        Setup();
         for(int i = 0; i <= delay; i++) {
-            text.text = StringForCount(delay - i);
-            yield return ShrinkOverTime(1f);
+            if(delay - i > 0) {
+                tickSource.Play();
+                text.text = (delay - i).ToString();
+            } else {
+                goSource.Play();
+                text.text = startString;
+            }
+            yield return ShrinkOverTime(tickDuration);
         }
         text.text = "";
         function();
