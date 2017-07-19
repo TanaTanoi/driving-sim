@@ -13,8 +13,10 @@ public class SmallCityBuilder : MonoBehaviour {
     public Color buildingColour = Color.black;
     public Color roadColour = Color.white;
     public Color itemColour = Color.green;
+    public Color startColour = Color.blue;
 
     private Color[] pixels;
+    private Vector3 startPosition;
 
     public void BuildCity(){
         DestroyChildren();
@@ -25,16 +27,39 @@ public class SmallCityBuilder : MonoBehaviour {
         buildings.transform.parent = transform;
         GameObject items = new GameObject("Items");
         items.transform.parent = transform;
+
         for(int i = 0; i < map.width; i++){
             for(int j = 0; j < map.height; j++){
                 if(ColorAt(i, j) == buildingColour){
                     CreateBuildingAt(i, j, DirsForPixel(i, j), buildings.transform);
                 } else if(ColorAt(i, j) == itemColour) {
                     PlaceItem(items.transform, i, j);
+                } else if(ColorAt(i, j) == startColour) {
+                    // The middle of this tile
+                    startPosition = new Vector3(((i + 0.5f) * scale), 0, ((j + 0.5f) * scale));
                 }
             }
         }
         Debug.Log("Finished reading");
+    }
+
+    public Vector3 GetStartPosition() {
+        if(startPosition == Vector3.zero) {
+            startPosition = FindStartPosition();
+        }
+        Debug.Log("Start pos " + startPosition);
+        return startPosition;
+    }
+
+    private Vector3 FindStartPosition() {
+        for(int i = 0; i < map.width; i++){
+            for(int j = 0; j < map.height; j++){
+                if(ColorAt(i, j) == startColour) {
+                    return new Vector3(((i + 0.5f) * scale), 0, ((j + 0.5f) * scale));
+                }
+            }
+        }
+        throw new System.Exception("No start position on this layout! Please use a different one.");
     }
 
     private void PlaceItem(Transform  parent, int x, int y) {

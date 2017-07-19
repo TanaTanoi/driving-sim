@@ -14,7 +14,7 @@ public class TestManager : MonoBehaviour {
 
     public Canvas startMenu;
     public Canvas resultsMenu;
-    public Transform startPosition; // DEBUG - GET BETTER SYSTEM FOR THIS
+    public SmallCityBuilder city;
     public GameObject carPrefab;
     public AnalyticsController analytics;
 
@@ -23,6 +23,7 @@ public class TestManager : MonoBehaviour {
     // CONTEXT IDS: 0 HMD, 1 CAVE, 2 SINGLE
     private int context = VRContext.SINGLE;
 
+    private int layout = 0;
 	// Use this for initialization
 	void Start () {
         ShowMainMenu();
@@ -37,6 +38,10 @@ public class TestManager : MonoBehaviour {
         context = contextID.value;
     }
 
+    public void SetLayout(Dropdown layoutID) {
+        layout = layoutID.value;
+    }
+
     public void ShowMainMenu() {
         startMenu.gameObject.SetActive(true);
         resultsMenu.gameObject.SetActive(false);
@@ -44,6 +49,8 @@ public class TestManager : MonoBehaviour {
 
     // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest() {
+        city.BuildCity();
+
         // Hide start menu
         startMenu.gameObject.SetActive(false);
 
@@ -65,7 +72,7 @@ public class TestManager : MonoBehaviour {
     private void SetupCar() {
         // Create car with correct context
         car = Instantiate(carPrefab);
-        car.transform.position = startPosition.position;
+        car.transform.position = city.GetStartPosition();
         VRCameraPod cameras = car.GetComponentInChildren<VRCameraPod>();
         if(context == VRContext.SINGLE) {
             cameras.SetSingleCamera();
