@@ -12,7 +12,6 @@ public class VRContext {
 // This class runs the tests
 public class TestManager : MonoBehaviour {
 
-
     public Canvas startMenu;
     public Canvas resultsMenu;
     public Transform startPosition; // DEBUG - GET BETTER SYSTEM FOR THIS
@@ -43,19 +42,20 @@ public class TestManager : MonoBehaviour {
         resultsMenu.gameObject.SetActive(false);
     }
 
+    // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest() {
-        // Hide menu
+        // Hide start menu
         startMenu.gameObject.SetActive(false);
 
         SetupCar();
-        SetupModuleVariables();
+        SetupAnalytics();
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
         cd.StartCountdown(1, EnableControl);
     }
 
     public void EnableControl() {
-        // TODO rework
+        // TODO rework car control parts
         UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
         controller.enabled = true;
 
@@ -81,7 +81,9 @@ public class TestManager : MonoBehaviour {
     }
 
     // Sets up any modules with additional requirements (e.g. DisplacementModule needs a target)
-    private void SetupModuleVariables() {
+    private void SetupAnalytics() {
+
+        analytics.ClearTracking();
         
         // Ensure modules have required stuff, if equipt
         DisplacementModule dm = analytics.gameObject.GetComponent<DisplacementModule>();

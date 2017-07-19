@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(DisplacementModule))]
 [RequireComponent(typeof(TimeTakenModule))]
-public class DisplacementRenderModule : MonoBehaviour {
+public class DisplacementRenderModule : AnalyticsViewModule {
     
     public float lineWidth = 0.725f;
     public Material lineMaterial;
@@ -18,12 +19,13 @@ public class DisplacementRenderModule : MonoBehaviour {
     private GameObject lineSegments; // Used to hold all the line segment meshes
     private int currentSegments = 0;
 
+    private bool trackSegments = false;
+
 	// Use this for initialization
 	void Start () {
         displacementMod = GetComponent<DisplacementModule>();
         timeMod = GetComponent<TimeTakenModule>();
-        lineSegments = new GameObject("Line Segments");
-        lineSegments.transform.parent = transform;
+        Setup();
 
         TimeLimitModule timeLimitMod = GetComponent<TimeLimitModule>();
         if(timeLimitMod != null && timeLimit <= 0) {
@@ -35,7 +37,7 @@ public class DisplacementRenderModule : MonoBehaviour {
         int posCount = displacementMod.PositionCount();
 
         // If we have fewer segments than there are points, add a line segment
-        if(currentSegments <= posCount && posCount > 2) {
+        if(trackSegments && currentSegments <= posCount && posCount > 2) {
             List<Vector3> positions = displacementMod.GetPositions();
 
             // Add the last two points as a segment
@@ -88,5 +90,25 @@ public class DisplacementRenderModule : MonoBehaviour {
         mr.SetPropertyBlock(propBlock);
         lineSegment.transform.parent = lineSegments.transform;
         lineSegment.layer = AnalyticsController.OBSERVER_LAYER;
+    }
+
+    public override void StartDisplay() {
+        trackSegments = true;
+    }
+
+    public override void StopDisplay() {
+        trackSegments = false;
+    }
+
+    public override void ClearDisplay() {
+        Destroy(lineSegments);
+        Setup();
+    }
+
+    // Clears the information between displays
+    private void Setup() {
+        lineSegments = new GameObject("Line Segments");
+        lineSegments.transform.parent = transform;
+        currentSegments = 0;
     }
 }

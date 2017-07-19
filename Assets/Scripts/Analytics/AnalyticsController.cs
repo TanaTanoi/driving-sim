@@ -7,11 +7,13 @@ public class AnalyticsController : MonoBehaviour {
     public const int OBSERVER_LAYER = 8;
 
     AnalyticModule[] modules;
+    AnalyticsViewModule[] viewModules;
 
     private bool tracking = false;
 
     void Start() {
         modules = gameObject.GetComponents<AnalyticModule>();
+        viewModules = gameObject.GetComponents<AnalyticsViewModule>();
     }
 
     public void StartTracking() {
@@ -19,12 +21,24 @@ public class AnalyticsController : MonoBehaviour {
         foreach(AnalyticModule mod in modules) {
             mod.StartTracking();
         }
+        foreach(AnalyticsViewModule vmod in viewModules) {
+            vmod.StartDisplay();
+        }
     }
 
      public void StopTracking() {
         tracking = false;
         foreach(AnalyticModule mod in modules) {
             mod.StopTracking();
+        }
+        foreach(AnalyticsViewModule vmod in viewModules) {
+            vmod.StopDisplay();
+        }
+    }
+
+    public void ClearTracking() {
+        foreach(AnalyticsViewModule vmod in viewModules) {
+            vmod.ClearDisplay();
         }
     }
 
