@@ -11,6 +11,8 @@ public class ItemsClearModule : TerminationModule {
 
     private int totalItems;
 
+    public int TotalItems { get { return totalItems; } }
+
     public override string TerminationReason {
         get {
             return "Target percentage ("+ targetProgress +"% of " + totalItems +") of items collected.";
@@ -23,10 +25,10 @@ public class ItemsClearModule : TerminationModule {
     }
 
     public override bool TestOver() {
-        return (float)CollectedItemsCount() / (float)totalItems > (targetProgress / 100f)   ;
+        return (float)CollectedItemsCount() / (float)totalItems >= (targetProgress / 100f)   ;
     }
 
-    private int CollectedItemsCount() {
+    public int CollectedItemsCount() {
         return itemsMod.ItemsCollected;
     }
 
