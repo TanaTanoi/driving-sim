@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ItemsCollectedModule))]
 public class ItemsClearModule : TerminationModule {
    [Range(0,100)] public float targetProgress = 50;
 
-    private int collectedItems = 0;
+    private ItemsCollectedModule itemsMod;
+
     private int totalItems;
 
     public override string TerminationReason {
@@ -17,8 +19,7 @@ public class ItemsClearModule : TerminationModule {
 
     public new void Start() {
         base.Start();
-        totalItems = FindObjectsOfType<Item>().Length;
-        Debug.Log("Getting this many " + totalItems);
+        itemsMod = GetComponent<ItemsCollectedModule>();
     }
 
     public override bool TestOver() {
@@ -26,6 +27,11 @@ public class ItemsClearModule : TerminationModule {
     }
 
     private int CollectedItemsCount() {
-        return totalItems - FindObjectsOfType<Item>().Length;
+        return itemsMod.ItemsCollected;
+    }
+
+    public override void Setup() {
+        totalItems = FindObjectsOfType<Item>().Length;
+        Debug.Log("Getting this many " + totalItems);
     }
 }

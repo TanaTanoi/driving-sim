@@ -26,7 +26,8 @@ public class TestManager : MonoBehaviour {
     }
 
     // Sets up the test with analytics and a car, then starts it after a delay
-    public void StartTest(int context, int layout) {
+    public void StartTest(int context, Texture2D layout) {
+        city.map = layout;
         city.BuildCity();
 
         // Hide start menu

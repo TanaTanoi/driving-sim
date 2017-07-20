@@ -8,12 +8,14 @@ public class AnalyticsController : MonoBehaviour {
 
     AnalyticModule[] modules;
     AnalyticsViewModule[] viewModules;
+    TerminationModule[] termModules;
 
     private bool tracking = false;
 
     void Start() {
         modules = gameObject.GetComponents<AnalyticModule>();
         viewModules = gameObject.GetComponents<AnalyticsViewModule>();
+        termModules = gameObject.GetComponents<TerminationModule>();
     }
 
     public void StartTracking() {
@@ -23,6 +25,9 @@ public class AnalyticsController : MonoBehaviour {
         }
         foreach(AnalyticsViewModule vmod in viewModules) {
             vmod.StartDisplay();
+        }
+        foreach (TerminationModule tmod in termModules) {
+            tmod.Setup();
         }
     }
 

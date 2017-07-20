@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(TimeTakenModule))]
 public class TimeLimitModule : TerminationModule {
 
     public TimeTakenModule timetaken;
@@ -10,7 +10,7 @@ public class TimeLimitModule : TerminationModule {
 
     public override string TerminationReason {
         get {
-            return "Time limit (" + timelimit + " seconds) exceeded";
+            return "Time limit (" + timelimit + " seconds) exceeded.";
         }
     }
 
@@ -18,15 +18,14 @@ public class TimeLimitModule : TerminationModule {
     public new void Start () {
         base.Start();
 
-        if(timetaken == null) {
-            timetaken = GetComponent<TimeTakenModule>();
-            if(timetaken == null) {
-                throw new Exception("TimeLimitModule requires a TimeTakenModule component!");
-            }
-        }
+        timetaken = GetComponent<TimeTakenModule>();
 	}
 	
     public override bool TestOver() {
         return float.Parse(timetaken.AnalyticValue()) > timelimit;
+    }
+
+    public override void Setup() {
+        // No setup requried
     }
 }

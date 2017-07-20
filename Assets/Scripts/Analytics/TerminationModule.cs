@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AnalyticsController))]
 public abstract class TerminationModule : MonoBehaviour {
 
     public abstract string TerminationReason { get; }
@@ -12,10 +13,9 @@ public abstract class TerminationModule : MonoBehaviour {
 
     public void Start() {
         controller = GetComponent<AnalyticsController>();
-        if(controller == null) {
-            throw new System.Exception("Termination Modules require AnalyticsControllers to be present!");
-        }
     }
+
+    public abstract void Setup();
 
 	// Update is called once per frame
 	void Update () {

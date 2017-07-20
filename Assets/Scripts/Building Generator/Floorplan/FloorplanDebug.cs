@@ -10,40 +10,16 @@ public class FloorplanDebug : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        List<Vector2> LShape = MathUtility.InstructionsToPoints(
-            new List<Vector2> {
-                Vector2.zero, Vector2.right * 2, Vector2.up * 2, Vector2.left, Vector2.down, Vector2.left
-            });
-        List<Vector2> oct = MathUtility.InstructionsToPoints(
-        new List<Vector2> {
-            Vector2.zero, Vector2.right, Vector2.up + Vector2.right, Vector2.up, Vector2.up + Vector2.left, Vector2.left, Vector2.left + Vector2.down, Vector2.down
-        });
-        List<Vector2> thang = MathUtility.InstructionsToPoints(
-        new List<Vector2> {
-            Vector2.zero, Vector2.right * 16, Vector2.up * 4 + Vector2.left * 4, Vector2.left * 8
-        });
-        List<Vector2> test = MathUtility.InstructionsToPoints(
-        new List<Vector2> {
-            Vector2.zero, Vector2.down * 4 + Vector2.right * 6, Vector2.right * 4, Vector2.up * 4 + Vector2.left * 2, Vector2.left * 4 + Vector2.up * 2
-        });
         List<Vector2> H = MathUtility.InstructionsToPoints(
         new List<Vector2> {
             Vector2.zero * 2, Vector2.right * 2, Vector2.up * 2, Vector2.right * 2, Vector2.down * 2, Vector2.right * 2, Vector2.up * 6, Vector2.left * 2, Vector2.down * 2, Vector2.left * 2,
             Vector2.up * 2, Vector2.left  * 2
         });
-        //for (int i = 0; i < thang.Count; i++) {
-        //    Debug.DrawLine(thang[i], thang[(i + 1) % thang.Count], Color.black, 300f);
-        //}
-        List<Vector2> points = FloorplanManipulator.CreateSquareMesh(test);
-        //for (int i = 0; i < points.Count; i++) {
-        //    Debug.DrawLine(points[i], points[(i + 1) % points.Count], Color.red, 300f);
-        //}
         List<Vector3> floorplan = MathUtility.ConvertTo3D(H);
         for (int i = 0; i < floorplan.Count - 1; i++) {
             Debug.DrawLine(floorplan[i], floorplan[(i + 1) % floorplan.Count], Color.red, 300f);
         }
         floorplan.Reverse();
-        MeshCreator.WallMesh wallmesh = BuildingCreator.CreateBuilding(floorplan, BuildingCreator.BuildingType.RESIDENTIAL);
         
         //GameObject buildingObject = MeshCreator.AssignMeshesToGameObject(
         //    new List<Mesh>() { wallmesh.detailMesh, wallmesh.structuralMesh, wallmesh.doorMesh },

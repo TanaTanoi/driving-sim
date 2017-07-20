@@ -5,10 +5,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(TestManager))]
 public class TestManagerUI : MonoBehaviour {
 
-    private TestManager manager;
-
     public Text saveResultsTextbox;
+    public SimulatorSettingsStore settings;
+    public Dropdown layoutSelectionDropdown;
 
+    private TestManager manager;
     // CONTEXT IDS: 0 HMD, 1 CAVE, 2 SINGLE
     private int context = VRContext.SINGLE;
 
@@ -17,12 +18,14 @@ public class TestManagerUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        PopulateLayoutMenu();
+
         manager = GetComponent<TestManager>();
         manager.ShowMainMenu();
 	}
 
     public void StartTestPressed() {
-        manager.StartTest(context, layout);
+        manager.StartTest(context, settings.maps[layout]);
     }
 
     public void SaveResultsPressed(InputField input) {
@@ -49,5 +52,15 @@ public class TestManagerUI : MonoBehaviour {
 
     private void ResetResultsMenu() {
         saveResultsTextbox.text = "";
+    }
+
+    // Sets the dropdown names based on the images provided.
+    private void PopulateLayoutMenu() {
+        layoutSelectionDropdown.ClearOptions();
+        List<string> layoutNames = new List<string>();
+        foreach(Texture2D map in settings.maps) {
+            layoutNames.Add(map.name);
+        }
+        layoutSelectionDropdown.AddOptions(layoutNames);
     }
 }

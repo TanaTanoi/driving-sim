@@ -229,7 +229,7 @@ public class MeshCreator {
             try { 
                 earIndex = FindEarOfPolygon(polygon); // A of the ABC that is an ear
             } catch(System.Exception e) {
-                List<Vector2> p = MathUtility.ConvertTo2D(poly);
+                Debug.Log(e);
                 //for (int i = 0; i < p.Count; i++) {
                 //    Debug.DrawLine(p[i], p[(i + 1) % p.Count], Color.yellow, 300f);
                 //}

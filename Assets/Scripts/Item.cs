@@ -22,6 +22,7 @@ public class Item : MonoBehaviour {
     }
 
     public void OnTriggerEnter(Collider other) {
+        FindObjectOfType<ItemsCollectedModule>().CollectItem();
         ps.Stop();
         pickupSound.Play();
         GetComponent<Renderer>().enabled = false;
