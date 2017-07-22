@@ -82,8 +82,8 @@ public class DisplacementModule : AnalyticModule {
 
             // Entry : Time : Distance : X : Z : 
             sb.AppendLine(
-                i + DATA_SEPERATOR + (i * TIME_DELTA) + DATA_SEPERATOR + currentTotalDistance + 
-                DATA_SEPERATOR + current.x + DATA_SEPERATOR + current.z
+                i + DATA_SEPERATOR + (i * TIME_DELTA) + DATA_SEPERATOR + Mathf.Round(currentTotalDistance) + 
+                DATA_SEPERATOR + Mathf.Round(current.x) + DATA_SEPERATOR + Mathf.Round(current.z)
                 );
         }
         return sb.ToString();

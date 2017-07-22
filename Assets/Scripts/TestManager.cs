@@ -14,24 +14,20 @@ public class TestManager : MonoBehaviour {
 
     public Canvas startMenu;
     public Canvas resultsMenu;
+    public Canvas observerMenu;
+
     public SmallCityBuilder city;
     public GameObject carPrefab;
     public AnalyticsController analytics;
 
     private GameObject car;
 
-    public void ShowMainMenu() {
-        startMenu.gameObject.SetActive(true);
-        resultsMenu.gameObject.SetActive(false);
-    }
-
     // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest(int context, Texture2D layout) {
         city.map = layout;
         city.BuildCity();
 
-        // Hide start menu
-        startMenu.gameObject.SetActive(false);
+        ShowObserverMenu();
 
         SetupCar(context);
         SetupAnalytics();
@@ -85,7 +81,7 @@ public class TestManager : MonoBehaviour {
         Debug.Log("Test terminated for :" + reason);
         analytics.StopTracking();
         Destroy(car);
-        resultsMenu.gameObject.SetActive(true);
+        ShowResultsMenu();
     }
 
     // Returns if the write was successful
@@ -114,5 +110,22 @@ public class TestManager : MonoBehaviour {
             return false;
         }
         return true;
+    }
+    public void ShowMainMenu() {
+        startMenu.gameObject.SetActive(true);
+        observerMenu.gameObject.SetActive(false);
+        resultsMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowObserverMenu() {
+        observerMenu.gameObject.SetActive(true);
+        startMenu.gameObject.SetActive(false);
+        resultsMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowResultsMenu() {
+        resultsMenu.gameObject.SetActive(true);
+        observerMenu.gameObject.SetActive(false);
+        startMenu.gameObject.SetActive(false);
     }
 }
