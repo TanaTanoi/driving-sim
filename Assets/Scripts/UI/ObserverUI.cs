@@ -12,6 +12,7 @@ public class ObserverUI : MonoBehaviour {
     public const string IN = "IN";
     public const string OUT = "OUT";
 
+
     public Text consoleBox;
     private ScrollRect scroll;
 
@@ -19,6 +20,11 @@ public class ObserverUI : MonoBehaviour {
 
     public ObserverCameraController observerCam;
 
+    private float moveAcceleration = 1;
+    private float moveAccelerationTime = 0;
+    private const float MOVE_ACCELERATION_TIME_THRESHOLD = 1f;
+    private const float MOVE_ACCELERATION_SPEED = 0.7f;
+    private const float MOVE_ACCELERATION_DEFAULT = 1f;
     private bool lockConsoleScrollbar = true;
 
     void Start() {
@@ -26,19 +32,27 @@ public class ObserverUI : MonoBehaviour {
         scroll = GetComponentInChildren<ScrollRect>();
     }
 
+    // TODO add key movement as well
     public void CameraMovePressed(string dir) {
+        if(Time.time - moveAccelerationTime < MOVE_ACCELERATION_TIME_THRESHOLD) {
+            moveAcceleration += MOVE_ACCELERATION_SPEED;
+        } else {
+            moveAcceleration = MOVE_ACCELERATION_DEFAULT;
+        }
+        moveAccelerationTime = Time.time;
+
         switch(dir) {
             case UP:
-                observerCam.MoveUp();
+                observerCam.MoveUp(moveAcceleration);
                 break;
             case DOWN:
-                observerCam.MoveDown();
+                observerCam.MoveDown(moveAcceleration);
                 break;
             case LEFT:
-                observerCam.MoveLeft();
+                observerCam.MoveLeft(moveAcceleration);
                 break;
             case RIGHT:
-                observerCam.MoveRight();
+                observerCam.MoveRight(moveAcceleration);
                 break;
             default:
                 throw new System.Exception("Direction " + dir + " not supported in Camera Move");

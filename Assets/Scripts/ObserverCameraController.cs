@@ -10,12 +10,19 @@ public class ObserverCameraController : MonoBehaviour {
     private const float MOVE_SPEED = 1f;
     private const float ZOOM_SPEED = 5;
 
+    private Vector3 desiredPos;
+
     private Camera cam;
 
     void Start() {
         cam = GetComponent<Camera>();
         origin = transform.position;
+        desiredPos = origin;
         originalSize = cam.orthographicSize;
+    }
+
+    void Update() {
+        transform.position += (desiredPos - transform.position) * 0.5f;
     }
 
     public void MoveUp(float multiplier = 1) {
@@ -47,7 +54,7 @@ public class ObserverCameraController : MonoBehaviour {
     }
 
     private void Move(Vector3 dir, float multiplier) {
-        transform.position += dir * multiplier;
+        desiredPos += dir * multiplier;
     }
     
 }
