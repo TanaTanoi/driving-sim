@@ -12,6 +12,9 @@ public class ObserverUI : MonoBehaviour {
     public const string IN = "IN";
     public const string OUT = "OUT";
 
+    private const float MOVE_ACCELERATION_TIME_THRESHOLD = 1f;
+    private const float MOVE_ACCELERATION_SPEED = 0.7f;
+    private const float MOVE_ACCELERATION_DEFAULT = 1f;
 
     public Text consoleBox;
     private ScrollRect scroll;
@@ -22,14 +25,24 @@ public class ObserverUI : MonoBehaviour {
 
     private float moveAcceleration = 1;
     private float moveAccelerationTime = 0;
-    private const float MOVE_ACCELERATION_TIME_THRESHOLD = 1f;
-    private const float MOVE_ACCELERATION_SPEED = 0.7f;
-    private const float MOVE_ACCELERATION_DEFAULT = 1f;
     private bool lockConsoleScrollbar = true;
+
+    private bool locatorBeconToggle = false;
+    private LocatorBecon becon;
+
+    private bool followCar = false;
 
     void Start() {
         manager = FindObjectOfType<TestManager>();
         scroll = GetComponentInChildren<ScrollRect>();
+    }
+
+    void FixedUpdate() {
+        if(followCar) {
+            FindBecon(); // Ensures becon exists
+            observerCam.SetDesiredLocation(becon.transform.position);
+
+        }
     }
 
     // TODO add key movement as well
@@ -76,7 +89,17 @@ public class ObserverUI : MonoBehaviour {
     }
 
     public void CameraHighlightCarPressed() {
-        // TODO
+        FindBecon();
+        locatorBeconToggle = !locatorBeconToggle;
+        if(locatorBeconToggle) {
+            becon.EnableLocator();
+        } else {
+            becon.DisableLocator();
+        }
+    }
+
+    public void CameraFollowCarPressed() {
+        followCar = !followCar;
     }
 
     public void EndTestPressed() {
@@ -85,5 +108,11 @@ public class ObserverUI : MonoBehaviour {
 
     public void SetConsoleText(string text) {
         consoleBox.text = text;
+    }
+
+    private void FindBecon() {
+        if(becon == null) {
+            becon = FindObjectOfType<LocatorBecon>();
+        }
     }
 }

@@ -11,6 +11,7 @@ public class ObserverCameraController : MonoBehaviour {
     private const float ZOOM_SPEED = 5;
 
     private Vector3 desiredPos;
+    private float desiredSize;
 
     private Camera cam;
 
@@ -19,10 +20,16 @@ public class ObserverCameraController : MonoBehaviour {
         origin = transform.position;
         desiredPos = origin;
         originalSize = cam.orthographicSize;
+        desiredSize = originalSize;
     }
 
     void Update() {
         transform.position += (desiredPos - transform.position) * 0.5f;
+        cam.orthographicSize += (desiredSize - cam.orthographicSize) * 0.5f;
+    }
+
+    public void SetDesiredLocation(Vector3 desired) {
+        desiredPos = new Vector3(desired.x, origin.y, desired.z);
     }
 
     public void MoveUp(float multiplier = 1) {
@@ -41,16 +48,16 @@ public class ObserverCameraController : MonoBehaviour {
     }
 
     public void ZoomIn() {
-        cam.orthographicSize += ZOOM_SPEED;
+        desiredSize += ZOOM_SPEED;
     }
 
     public void ZoomOut() {
-        cam.orthographicSize -= ZOOM_SPEED;
+        desiredSize -= ZOOM_SPEED;
     }
 
     public void Center() {
-        transform.position = origin;
-        cam.orthographicSize = originalSize;
+        desiredSize = originalSize;
+        desiredPos = origin;
     }
 
     private void Move(Vector3 dir, float multiplier) {
