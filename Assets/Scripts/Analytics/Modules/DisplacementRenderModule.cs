@@ -14,6 +14,8 @@ public class DisplacementRenderModule : AnalyticsViewModule {
     [Tooltip("This uses the TimeLimitModule if <= 0")]
     public float timeLimit = 0;
 
+    private static Vector3 OFFSET = Vector3.up * 0.5f;
+
     private DisplacementModule displacementMod;
     private TimeTakenModule timeMod;
     private GameObject lineSegments; // Used to hold all the line segment meshes
@@ -41,7 +43,7 @@ public class DisplacementRenderModule : AnalyticsViewModule {
             List<Vector3> positions = displacementMod.GetPositions();
 
             // Add the last two points as a segment
-            AddLineSegment(positions[posCount - 1], positions[posCount - 2]);
+            AddLineSegment(positions[posCount - 1] + OFFSET, positions[posCount - 2] + OFFSET);
             currentSegments++;
         }
 		
