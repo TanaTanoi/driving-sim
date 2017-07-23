@@ -15,7 +15,11 @@ public class ItemsCollectedView : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        text.text = PaddedNumber(itemsMod.CollectedItemsCount()) + " / " + PaddedNumber(itemsMod.TotalItems);
+        if(itemsMod != null) {
+            text.text = PaddedNumber(itemsMod.CollectedItemsCount()) + " / " + PaddedNumber(itemsMod.TotalItems);
+        } else {
+            text.text = "Error";
+        }
 	}
 
     private string PaddedNumber(int input) {

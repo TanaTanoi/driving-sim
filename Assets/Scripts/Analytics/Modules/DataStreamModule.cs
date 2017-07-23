@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 // Streams data to the observer menu
@@ -18,7 +19,13 @@ public class DataStreamModule : AnalyticsViewModule {
 
     void FixedUpdate() {
         if(ui != null) {
-            ui.SetConsoleText(controller.Data()[0]);
+            StringBuilder sb = new StringBuilder();
+            string[] names = controller.Names();
+            string[] values = controller.Values();
+            for(int i = 0; i < names.Length; i++) {
+                sb.AppendLine(String.Format("{0, -20}{1, 10}", names[i], values[i]));
+            }
+            ui.SetConsoleText(sb.ToString());
         }
     }
 

@@ -61,11 +61,11 @@ public class DisplacementModule : AnalyticModule {
     }
 
     public override string AnalyticName() {
-        return "Distance Travelled";
+        return "Distance";
     }
 
     public override string AnalyticValue() {
-        return distanceTravelled.ToString();
+        return Mathf.Round(distanceTravelled).ToString();
     }
 
     public override string AnalyticData() {

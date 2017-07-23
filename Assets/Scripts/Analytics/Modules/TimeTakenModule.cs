@@ -20,11 +20,11 @@ public class TimeTakenModule : AnalyticModule {
     }
 
     public override string AnalyticName() {
-        return "Time Taken";
+        return "Time";
     }
 
     public override string AnalyticValue() {
-        return CurrentTime().ToString();
+        return Mathf.Round(CurrentTime()).ToString();
     }
 
     public override string AnalyticData() {
