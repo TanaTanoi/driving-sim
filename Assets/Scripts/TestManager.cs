@@ -68,6 +68,7 @@ public class TestManager : MonoBehaviour {
     private void SetupAnalytics() {
 
         analytics.ClearTracking();
+        analytics.SetupTracking();
         
         // Ensure modules have required stuff, if equipt
         DisplacementModule dm = analytics.gameObject.GetComponent<DisplacementModule>();

@@ -26,7 +26,10 @@ public class AnalyticsController : MonoBehaviour {
         foreach(AnalyticsViewModule vmod in viewModules) {
             vmod.StartDisplay();
         }
-        foreach (TerminationModule tmod in termModules) {
+    }
+
+    public void SetupTracking() {
+         foreach (TerminationModule tmod in termModules) {
             tmod.Setup();
         }
     }
