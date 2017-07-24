@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class VRCameraPod : MonoBehaviour {
 
-    public GameObject vrCameras;
+    public GameObject headsetCameraWrapper;
     public CaveCameraPod caveCameras;
+    public Transform idealHeadsetPosition;
+
+    private GameObject headsetCamera;
 
 	// Use this for initialization
 	void Start () {
+       
 	}
 	
 	// Update is called once per frame
@@ -17,17 +21,23 @@ public class VRCameraPod : MonoBehaviour {
 	}
 
     public void SetSingleCamera() {
-        vrCameras.SetActive(false);
+        headsetCameraWrapper.SetActive(false);
         caveCameras.SetFrontCamera();
     }
 
     public void SetCaveCameras() {
-        vrCameras.SetActive(false);
+        headsetCameraWrapper.SetActive(false);
         caveCameras.SetAllCameras();
     }
 
     public void SetVrCameras() {
-        vrCameras.SetActive(true);
+        headsetCameraWrapper.SetActive(true);
         caveCameras.DisableCameras();
+    }
+
+    // Move's the headset wrapper such that the headset camera is in the ideal position
+    public void CalibrateHeadset() {
+        headsetCamera = headsetCameraWrapper.transform.GetChild(0).gameObject;
+        headsetCameraWrapper.transform.position += (idealHeadsetPosition.position - headsetCamera.transform.position);
     }
 }

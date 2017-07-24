@@ -57,6 +57,7 @@ public class TestManager : MonoBehaviour {
         // TODO rework car control parts
         UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
         controller.enabled = true;
+        car.GetComponentInChildren<VRCameraPod>().CalibrateHeadset();
 
         analytics.StartTracking();
     }
