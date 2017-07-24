@@ -22,8 +22,14 @@ public class TestManager : MonoBehaviour {
 
     private GameObject car;
 
+    string output;
+    string stack;
+
     // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest(int context, Texture2D layout) {
+
+        //Application.RegisterLogCallback(HandleLog); // for Debugging in build mode
+
         city.map = layout;
         city.BuildCity();
 
@@ -34,6 +40,17 @@ public class TestManager : MonoBehaviour {
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
         cd.StartCountdown(1, EnableControl);
+    }
+
+    void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        output += logString;
+        stack = stackTrace;
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
     }
 
     public void EnableControl() {
@@ -60,8 +77,8 @@ public class TestManager : MonoBehaviour {
         }
 
         // TODO rework
-        UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
-        controller.enabled = false;
+        //UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
+        //controller.enabled = false;
     }
 
     // Sets up any modules with additional requirements (e.g. DisplacementModule needs a target)
