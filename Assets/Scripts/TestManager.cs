@@ -25,6 +25,12 @@ public class TestManager : MonoBehaviour {
     string output;
     string stack;
 
+    void Start() {
+        startMenu.gameObject.SetActive(true);
+        resultsMenu.gameObject.SetActive(true);
+        observerMenu.gameObject.SetActive(true);
+    }
+
     // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest(int context, Texture2D layout) {
 
@@ -42,24 +48,26 @@ public class TestManager : MonoBehaviour {
         cd.StartCountdown(1, EnableControl);
     }
 
-    void HandleLog(string logString, string stackTrace, LogType type)
-    {
+    void HandleLog(string logString, string stackTrace, LogType type) {
         output += logString;
         stack = stackTrace;
     }
 
-    void OnGUI()
-    {
+    void OnGUI() {
         GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
     }
 
     public void EnableControl() {
-        // TODO rework car control parts
-        UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
-        controller.enabled = true;
-        car.GetComponentInChildren<VRCameraPod>().CalibrateHeadset();
+        SetCarActive(true);
+        car.GetComponentInChildren<VRCameraPod>().CalibrateHeadset(); // testing: remove
 
         analytics.StartTracking();
+    }
+
+    private void SetCarActive(bool enabled) {
+        UnityStandardAssets.Vehicles.Car.CarUserControl controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>();
+        controller.enabled = enabled;
+        car.GetComponent<Rigidbody>().isKinematic = !enabled;
     }
 
     private void SetupCar(int context) {
@@ -77,15 +85,12 @@ public class TestManager : MonoBehaviour {
             throw new System.Exception("Unknown Context " + context);
         }
 
-        // TODO rework
-        //UnityStandardAssets.Vehicles.Car.CarController controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>();
-        //controller.enabled = false;
+        SetCarActive(false);
     }
 
     // Sets up any modules with additional requirements (e.g. DisplacementModule needs a target)
     private void SetupAnalytics() {
 
-        analytics.ClearTracking();
         analytics.SetupTracking();
         
         // Ensure modules have required stuff, if equipt
@@ -95,11 +100,21 @@ public class TestManager : MonoBehaviour {
         }
     }
 
+    // Cleans the test by removing any test specific items
+    public void CleanupTest() {
+        observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(false);
+        analytics.ClearTracking();
+        if(car != null) {
+            Destroy(car);
+        }
+    }
+
     // Stops tracking, destroys the car, and displays the results menu
     public void EndTest(string reason = "Unknown Reason.") {
         Debug.Log("Test terminated for :" + reason);
         analytics.StopTracking();
-        Destroy(car);
+        SetCarActive(false);
+        observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(true);
         ShowResultsMenu();
     }
 
@@ -130,6 +145,7 @@ public class TestManager : MonoBehaviour {
         }
         return true;
     }
+
     public void ShowMainMenu() {
         SetMenuEnabled(startMenu, true);
         SetMenuEnabled(observerMenu, false);
@@ -148,6 +164,7 @@ public class TestManager : MonoBehaviour {
         SetMenuEnabled(resultsMenu, true);
     }
 
+    // Potentially refactor to use their own scripts with a enable/disable on the UI scripts?
     private void SetMenuEnabled(CanvasGroup canvas, bool enabled) {
         canvas.interactable = enabled;
         canvas.blocksRaycasts = enabled;

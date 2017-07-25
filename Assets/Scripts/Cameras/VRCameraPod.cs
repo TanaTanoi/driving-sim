@@ -10,16 +10,6 @@ public class VRCameraPod : MonoBehaviour {
 
     private GameObject headsetCamera;
 
-	// Use this for initialization
-	void Start () {
-       
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void SetSingleCamera() {
         headsetCameraWrapper.SetActive(false);
         caveCameras.SetFrontCamera();

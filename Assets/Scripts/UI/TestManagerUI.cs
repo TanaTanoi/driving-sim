@@ -47,6 +47,7 @@ public class TestManagerUI : MonoBehaviour {
 
     public void RestartPressed() {
         ResetResultsMenu();
+        manager.CleanupTest();
         manager.ShowMainMenu();
     }
 

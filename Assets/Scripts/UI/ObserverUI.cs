@@ -20,8 +20,8 @@ public class ObserverUI : MonoBehaviour {
     private ScrollRect scroll;
 
     private TestManager manager;
-
     public ObserverCameraController observerCam;
+    public Button goToResultsButton;
 
     private float moveAcceleration = 1;
     private float moveAccelerationTime = 0;
@@ -96,6 +96,14 @@ public class ObserverUI : MonoBehaviour {
         } else {
             becon.DisableLocator();
         }
+    }
+
+    public void SetGoToResultsButtonActive(bool enabled) {
+        goToResultsButton.gameObject.SetActive(enabled);
+    }
+
+    public void GoToResultsPressed() {
+        manager.ShowResultsMenu();
     }
 
     public void CameraFollowCarPressed() {

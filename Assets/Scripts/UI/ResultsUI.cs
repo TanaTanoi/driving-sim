@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class ResultsUI : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public TestManager manager;
 
-    public void ViewMapButton() {
-
+    public void ViewMapPressed() {
+        manager.ShowObserverMenu();
     }
 }
