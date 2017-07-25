@@ -47,12 +47,12 @@ public class ObserverCameraController : MonoBehaviour {
         Move(-transform.right, multiplier * MOVE_SPEED);    
     }
 
-    public void ZoomIn() {
-        desiredSize += ZOOM_SPEED;
+    public void ZoomIn(float multiplier = 1) {
+        desiredSize -= ZOOM_SPEED * multiplier;
     }
 
-    public void ZoomOut() {
-        desiredSize -= ZOOM_SPEED;
+    public void ZoomOut(float multiplier = 1) {
+        desiredSize += ZOOM_SPEED * multiplier;
     }
 
     public void Center() {

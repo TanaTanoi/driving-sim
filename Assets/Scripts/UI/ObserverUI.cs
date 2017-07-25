@@ -12,9 +12,12 @@ public class ObserverUI : MonoBehaviour {
     public const string IN = "IN";
     public const string OUT = "OUT";
 
-    private const float MOVE_ACCELERATION_TIME_THRESHOLD = 1f;
+    private const float ACCELERATION_TIME_THRESHOLD = 1f;
     private const float MOVE_ACCELERATION_SPEED = 0.7f;
-    private const float MOVE_ACCELERATION_DEFAULT = 1f;
+    private const float MOVE_ACCELERATION_DEFAULT = 2f;
+
+    private const float ZOOM_ACCELERATION_SPEED = 0.2f;
+    private const float ZOOM_MULTIPLIER_DEFAULT = 1;
 
     public Text consoleBox;
     private ScrollRect scroll;
@@ -23,8 +26,10 @@ public class ObserverUI : MonoBehaviour {
     public ObserverCameraController observerCam;
     public Button goToResultsButton;
 
-    private float moveAcceleration = 1;
+    private float moveAcceleration = MOVE_ACCELERATION_DEFAULT;
     private float moveAccelerationTime = 0;
+    private float zoomAcceleration = ZOOM_MULTIPLIER_DEFAULT;
+    private float zoomAccelerationTime = 0;
     private bool lockConsoleScrollbar = true;
 
     private bool locatorBeconToggle = false;
@@ -47,7 +52,7 @@ public class ObserverUI : MonoBehaviour {
 
     // TODO add key movement as well
     public void CameraMovePressed(string dir) {
-        if(Time.time - moveAccelerationTime < MOVE_ACCELERATION_TIME_THRESHOLD) {
+        if(Time.time - moveAccelerationTime < ACCELERATION_TIME_THRESHOLD) {
             moveAcceleration += MOVE_ACCELERATION_SPEED;
         } else {
             moveAcceleration = MOVE_ACCELERATION_DEFAULT;
@@ -77,10 +82,18 @@ public class ObserverUI : MonoBehaviour {
             Debug.Log("Invalid option for camera zoom!");
             return;
         }                                                
-        if(dir == IN) {
-            observerCam.ZoomIn();
+
+        if(Time.time - zoomAccelerationTime < ACCELERATION_TIME_THRESHOLD) {
+            zoomAcceleration += ZOOM_ACCELERATION_SPEED;
         } else {
-            observerCam.ZoomOut();
+            zoomAcceleration = ZOOM_MULTIPLIER_DEFAULT;
+        }
+        zoomAccelerationTime= Time.time;
+
+        if(dir == IN) {
+            observerCam.ZoomIn(zoomAcceleration);
+        } else {
+            observerCam.ZoomOut(zoomAcceleration);
         }
     }
 
