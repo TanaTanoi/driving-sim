@@ -19,7 +19,7 @@ public class ItemsCollectedModule : AnalyticModule {
     }
 
     public override string AnalyticName() {
-        return "Items";
+        return "Items Collected";
     }
 
     public override string AnalyticValue() {

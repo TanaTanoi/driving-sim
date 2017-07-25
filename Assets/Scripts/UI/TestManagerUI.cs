@@ -5,7 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(TestManager))]
 public class TestManagerUI : MonoBehaviour {
 
-    public Text saveResultsTextbox;
     public SimulatorSettingsStore settings;
     public Dropdown layoutSelectionDropdown;
 
@@ -28,31 +27,12 @@ public class TestManagerUI : MonoBehaviour {
         manager.StartTest(context, settings.maps[layout]);
     }
 
-    public void SaveResultsPressed(InputField input) {
-        if(manager.SaveResults(input.text)) {
-            input.text = "";
-            saveResultsTextbox.text = "Save successful!";
-        } else {
-            saveResultsTextbox.text = "Error writing results!";
-        }
-    }
-
     public void ContextDropdownChanged(Dropdown contextID) {
         context = contextID.value;
     }
 
     public void LayoutDropdownChanged(Dropdown layoutID) {
         layout = layoutID.value;
-    }
-
-    public void RestartPressed() {
-        ResetResultsMenu();
-        manager.CleanupTest();
-        manager.ShowMainMenu();
-    }
-
-    private void ResetResultsMenu() {
-        saveResultsTextbox.text = "";
     }
 
     // Sets the dropdown names based on the images provided.

@@ -61,7 +61,7 @@ public class DisplacementModule : AnalyticModule {
     }
 
     public override string AnalyticName() {
-        return "Distance";
+        return "Distance Covered";
     }
 
     public override string AnalyticValue() {

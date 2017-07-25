@@ -20,7 +20,7 @@ public class TimeTakenModule : AnalyticModule {
     }
 
     public override string AnalyticName() {
-        return "Time";
+        return "Time Taken";
     }
 
     public override string AnalyticValue() {

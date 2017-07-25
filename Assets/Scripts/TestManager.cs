@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,7 +56,8 @@ public class TestManager : MonoBehaviour {
     }
 
     void OnGUI() {
-        GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
+        // For Debugging only
+        // GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
     }
 
     public void EnableControl() {
@@ -102,6 +105,7 @@ public class TestManager : MonoBehaviour {
 
     // Cleans the test by removing any test specific items
     public void CleanupTest() {
+
         observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(false);
         analytics.ClearTracking();
         if(car != null) {
@@ -111,13 +115,27 @@ public class TestManager : MonoBehaviour {
 
     // Stops tracking, destroys the car, and displays the results menu
     public void EndTest(string reason = "Unknown Reason.") {
-        Debug.Log("Test terminated for :" + reason);
         analytics.StopTracking();
         SetCarActive(false);
         observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(true);
+        resultsMenu.GetComponent<ResultsUI>().SetOverviewContent(FinalResultsOverviewText(reason));
         ShowResultsMenu();
     }
 
+    private string FinalResultsOverviewText(string terminationReason) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("Termination Reason: " + terminationReason);
+        string[] names = analytics.Names();
+        string[] values = analytics.Values();
+        for(int i = 0; i < names.Length; i++) {
+            sb.AppendLine(String.Format("{0, -15}{1, 4}", names[i], values[i]));
+        }
+
+        return sb.ToString();
+    }
+
+    // TODO change the way results are saved. Separate it out
     // Returns if the write was successful
     public bool SaveResults(string input) {
         string filename = FilenameFor(input);
