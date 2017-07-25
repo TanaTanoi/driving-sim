@@ -12,9 +12,9 @@ public class VRContext {
 // This class runs the tests
 public class TestManager : MonoBehaviour {
 
-    public Canvas startMenu;
-    public Canvas resultsMenu;
-    public Canvas observerMenu;
+    public CanvasGroup startMenu;
+    public CanvasGroup resultsMenu;
+    public CanvasGroup observerMenu;
 
     public SmallCityBuilder city;
     public GameObject carPrefab;
@@ -131,20 +131,26 @@ public class TestManager : MonoBehaviour {
         return true;
     }
     public void ShowMainMenu() {
-        startMenu.gameObject.SetActive(true);
-        observerMenu.gameObject.SetActive(false);
-        resultsMenu.gameObject.SetActive(false);
+        SetMenuEnabled(startMenu, true);
+        SetMenuEnabled(observerMenu, false);
+        SetMenuEnabled(resultsMenu, false);
     }
 
     public void ShowObserverMenu() {
-        observerMenu.gameObject.SetActive(true);
-        startMenu.gameObject.SetActive(false);
-        resultsMenu.gameObject.SetActive(false);
+        SetMenuEnabled(startMenu, false);
+        SetMenuEnabled(observerMenu, true);
+        SetMenuEnabled(resultsMenu, false);
     }
 
     public void ShowResultsMenu() {
-        resultsMenu.gameObject.SetActive(true);
-        observerMenu.gameObject.SetActive(false);
-        startMenu.gameObject.SetActive(false);
+        SetMenuEnabled(startMenu, false);
+        SetMenuEnabled(observerMenu, false);
+        SetMenuEnabled(resultsMenu, true);
+    }
+
+    private void SetMenuEnabled(CanvasGroup canvas, bool enabled) {
+        canvas.interactable = enabled;
+        canvas.blocksRaycasts = enabled;
+        canvas.alpha = enabled ? 1 : 0;
     }
 }
