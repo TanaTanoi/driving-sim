@@ -89,7 +89,7 @@ public class BlockCreator : MonoBehaviour {
         if(transform.childCount == 0) {
             // Make new buildings if none are present
             foreach(List<Vector3> floorplan in floorplans) {
-                GameObject building = BuildingCreator.CreateBuildingObject(floorplan, BuildingCreator.BuildingType.RESIDENTIAL, atlas);
+                GameObject building = BuildingCreator.CreateBuildingObject(floorplan, BuildingCreator.BuildingType.RESIDENTIAL, atlas, new List<int>());
                 BoxCollider bc = building.AddComponent<BoxCollider>();
                 Vector3 mid = MathUtility.MidPoint(floorplan);
                 

@@ -178,21 +178,23 @@ public class MeshCreator {
     }
 
     // Creates a building floor from a given wall template and floorplan. Floorplan must be clockwise.
-    public static WallMesh CreateFloor(List<IWallComponent> walls, List<Vector3> floorplan, float height, bool generateCeiling) {
-        return CreateFloor(walls, null, floorplan, height, generateCeiling);
+    public static WallMesh CreateFloor(List<IWallComponent> walls, List<Vector3> floorplan, float height, bool generateCeiling, List<int> validFaces) {
+        return CreateFloor(walls, null, floorplan, height, generateCeiling, validFaces);
     }
 
     // Creates a floor with a door on the first face
-    public static WallMesh CreateFloor(List<IWallComponent> wallTemplate, IWallComponent door, List<Vector3> floorplan, float height, bool generateCeiling) {
-        return CreateFloor(wallTemplate, door, 0, floorplan, height, generateCeiling);
+    public static WallMesh CreateFloor(List<IWallComponent> wallTemplate, IWallComponent door, List<Vector3> floorplan, float height, bool generateCeiling, List<int> validFaces) {
+        return CreateFloor(wallTemplate, door, 0, floorplan, height, generateCeiling, validFaces);
     }
 
     // TODO consider having more than just one front face. List of selected ints? Assume contiguous and have lower to upper?
     // Creates a building floor from a given regular wall template, front template, and floorplan. Floorplan must be clockwise.
-    public static WallMesh CreateFloor(List<IWallComponent> wallTemplate, IWallComponent door, int frontFaceIndex, List<Vector3> floorplan, float height, bool generateCeiling) {
+    public static WallMesh CreateFloor(List<IWallComponent> wallTemplate, IWallComponent door, int frontFaceIndex, List<Vector3> floorplan, float height, bool generateCeiling, List<int> validFaces) {
         List<WallMesh> wallmeshes = new List<WallMesh>();
         // For each line in the floorplan
         for(int i = 0; i < floorplan.Count; i++) {
+            if (!validFaces.Contains(i))
+                continue;
             Vector3 topLeft = floorplan[i];
             Vector3 direction = floorplan[(i + 1) % floorplan.Count] - topLeft;
             float width = direction.magnitude;
@@ -348,11 +350,21 @@ public class MeshCreator {
         public string growthInstructions;
         public bool floorTrim;
         public Roof roofType;
+        public List<int> validFaces;
+        public BuildingProperties(float h, string gi, bool ft, Roof rt, List<int> vf) {
+            height = h;
+            growthInstructions = gi;
+            floorTrim = ft;
+            roofType = rt;
+            validFaces = vf;
+        }
+
         public BuildingProperties(float h, string gi, bool ft, Roof rt) {
             height = h;
             growthInstructions = gi;
             floorTrim = ft;
             roofType = rt;
+            validFaces = new List<int>();
         }
     }
 
@@ -362,7 +374,7 @@ public class MeshCreator {
         // Shif it up so that the floorplan is the top left 
         floorplan = TranslatePolygon(floorplan, Vector3.up * properties.height);
         // If the first instruction is a shrink, put a roof on it
-        WallMesh groundFloor = CreateFloor(primaryTemplate, doorWall, floorplan, properties.height, properties.growthInstructions[0] == SHRINK);
+        WallMesh groundFloor = CreateFloor(primaryTemplate, doorWall, floorplan, properties.height, properties.growthInstructions[0] == SHRINK, properties.validFaces);
         meshes.Add(groundFloor);
         // shift up after creating ground floor
         for (int i = 0; i < properties.growthInstructions.Length; i++) {
@@ -372,10 +384,10 @@ public class MeshCreator {
                 if(properties.floorTrim) { 
                     meshes.Add(CreateRoofTrim(floorplan, properties.height * 0.1f));
                     floorplan = TranslatePolygon(floorplan, Vector3.up * (properties.height));
-                    floor = CreateFloor(primaryTemplate, floorplan, properties.height * 0.9f, needCeil);
+                    floor = CreateFloor(primaryTemplate, floorplan, properties.height * 0.9f, needCeil, properties.validFaces);
                 } else {
                     floorplan = TranslatePolygon(floorplan, Vector3.up * (properties.height));
-                    floor = CreateFloor(primaryTemplate, floorplan, properties.height, needCeil);
+                    floor = CreateFloor(primaryTemplate, floorplan, properties.height, needCeil, properties.validFaces);
                 }
                 meshes.Add(floor);
             } else if(properties.growthInstructions[i] == SHRINK) {

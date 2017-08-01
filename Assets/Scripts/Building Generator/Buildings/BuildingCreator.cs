@@ -11,7 +11,7 @@ public class BuildingCreator {
     public static float FLOOR_HEIGHT = 2.5f;
 
 
-    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(1, 3);
+    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(2, 2);
     private static Range SKYSCRAPER_HEIGHT_RANGE = new Range(4, 6);
 
     public struct Range{
@@ -36,7 +36,7 @@ public class BuildingCreator {
         return wallmesh;
     }
 
-    public static MeshCreator.WallMesh CreateBuilding(List<Vector3> buildingLot, BuildingType type) {
+    public static MeshCreator.WallMesh CreateBuilding(List<Vector3> buildingLot, BuildingType type, List<int> validFaces) {
                 FacadeGenerator fg = new FacadeGenerator("Assets/GoodSystem.txt");
         IWallComponent primaryFront = fg.GenerateComponent('*');
         IWallComponent doorComponent = fg.GenerateComponent('D');
@@ -48,7 +48,7 @@ public class BuildingCreator {
         if(buildingLot.Count <= 6) { // if it's one of the more common building type, allow different ones
             roofType = RandomRoofType();
         }
-        MeshCreator.BuildingProperties props = new MeshCreator.BuildingProperties(FLOOR_HEIGHT, list, roomTrim, roofType);
+        MeshCreator.BuildingProperties props = new MeshCreator.BuildingProperties(FLOOR_HEIGHT, list, roomTrim, roofType, validFaces);
         return CreateBuilding(buildingLot, primaryTemplate, doorComponent, props);
     }
 
@@ -82,20 +82,20 @@ public class BuildingCreator {
     }
 
     public static string RandomGrowInstruction(){
-      string[] values = new string[] { "E", "E", "E", "SE"};
+      string[] values = new string[] { "E", "E", "E", "E"};
       return values[UnityEngine.Random.Range(0, values.Length)];
     }
 
-    public static GameObject CreateBuildingObject(List<Vector3> floorplan, BuildingType type, BuildingTextureAtlas atlas) {
+    public static GameObject CreateBuildingObject(List<Vector3> floorplan, BuildingType type, BuildingTextureAtlas atlas, List<int> validFaces) {
         return CreateBuildingObject(floorplan, type,
             atlas.RandomStructuralMaterial(type), atlas.RandomSecondaryStructuralMaterial(type),
-            atlas.RandomRoofMaterial(type), atlas.RandomWindowMaterial(type), atlas.RandomDoorMaterial(type));
+            atlas.RandomRoofMaterial(type), atlas.RandomWindowMaterial(type), atlas.RandomDoorMaterial(type), validFaces);
     }
 
-    public static GameObject CreateBuildingObject(List<Vector3> floorplan, BuildingType type, Material structMat, Material structMat2, Material roofMat, Material windowMat, Material doorMat) {
+    public static GameObject CreateBuildingObject(List<Vector3> floorplan, BuildingType type, Material structMat, Material structMat2, Material roofMat, Material windowMat, Material doorMat, List<int> validFaces) {
         //MeshCreator.WallMesh wallmesh = BuildingCreator.CreateBuilding(floorplan, type);
         Building building = new GameObject("Building").AddComponent<Building>();
-        building.SetParams(floorplan, type, new List<Material>() { structMat, structMat2, roofMat, windowMat, doorMat });
+        building.SetParams(floorplan, type, new List<Material>() { structMat, structMat2, roofMat, windowMat, doorMat }, validFaces);
         building.Build();
         return building.gameObject;
     }

@@ -14,6 +14,7 @@ public class SmallCityBuilder : MonoBehaviour {
     public Color roadColour = Color.white;
     public Color itemColour = Color.green;
     public Color startColour = Color.blue;
+    public Color noDrawColor = new Color(1, 1, 0);
 
     private Color[] pixels;
     private Vector3 startPosition;
@@ -77,25 +78,45 @@ public class SmallCityBuilder : MonoBehaviour {
         }
     }
 
-
+      private Color ColorAt(float x, float y) {
+        return ColorAt((int)x, (int)y);
+    }
     private Color ColorAt(int x, int y) {
         return pixels[(x * map.width) + y];
     }
 
-    private void CreateBuildingAt(float x, float y, Directions dirs, Transform parent)
-    {
+    private void CreateBuildingAt(float x, float y, Directions dirs, Transform parent) {
+
+        // relative to image: right = up, forward = right
+        // 3 is left, 0 is up, 1 is right, 2 is down (id to image dir)
         List<Vector3> floorplan = MathUtility.InstructionsToPoints(
             new List<Vector3>()
             {
                 new Vector3(x * scale, 0, y * scale), Vector3.right * scale, Vector3.forward * scale, Vector3.left * scale
             }, 1);
 
-        for(int i = 0; i < floorplan.Count - 1; i ++) {
-            Debug.DrawLine(floorplan[i], floorplan[i + 1], Color.black, 30f);
+        List<int> validFaces = new List<int> { 0, 1, 2, 3 };
+        if (x + 1 >= map.width || ColorAt(x + 1, y) == noDrawColor || ColorAt(x + 1, y) == buildingColour) {
+            // right
+            validFaces.Remove(1);
         }
 
+        if (x - 1 < 0 || ColorAt(x - 1, y) == noDrawColor || ColorAt(x - 1, y) == buildingColour) {
+            // left
+            validFaces.Remove(3);
+        }
+
+        if (y + 1 >= map.height || ColorAt(x, y + 1) == noDrawColor || ColorAt(x, y + 1) == buildingColour) {
+            // up
+            validFaces.Remove(0);
+        }
+
+        if (y - 1 < 0 || ColorAt(x, y - 1) == noDrawColor || ColorAt(x, y - 1) == buildingColour) {
+            //down 
+            validFaces.Remove(2);
+        }
         // Create building
-        GameObject building = BuildingCreator.CreateBuildingObject(floorplan, BuildingCreator.BuildingType.RESIDENTIAL, atlas);
+        GameObject building = BuildingCreator.CreateBuildingObject(floorplan, BuildingCreator.BuildingType.RESIDENTIAL, atlas, validFaces);
         BoxCollider bc = building.AddComponent<BoxCollider>();
         Vector3 mid = MathUtility.MidPoint(floorplan);
         Bounds b = new Bounds();

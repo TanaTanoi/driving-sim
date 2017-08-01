@@ -12,7 +12,8 @@ public class Building : MonoBehaviour {
     public Material doorMaterial;
 
     public List<Vector3> floorplan;
-    public void SetParams(List<Vector3> fp, BuildingCreator.BuildingType bt, List<Material> mats) {
+    public List<int> validFaces;
+    public void SetParams(List<Vector3> fp, BuildingCreator.BuildingType bt, List<Material> mats, List<int> vf) {
         floorplan = fp;
         fp.Reverse();
         type = bt;
@@ -21,6 +22,7 @@ public class Building : MonoBehaviour {
         roofMaterial = mats[2];
         windowMaterial = mats[3];
         doorMaterial = mats[4];
+        validFaces = vf;
     }
 
     public void Build() {
@@ -33,7 +35,7 @@ public class Building : MonoBehaviour {
         }
         //Debug.Log(sb.ToString());
         try {
-            MeshCreator.WallMesh wallmesh = BuildingCreator.CreateBuilding(floorplan, type);
+            MeshCreator.WallMesh wallmesh = BuildingCreator.CreateBuilding(floorplan, type, validFaces);
             MeshCreator.AssignMeshesToGameObjects(wallmesh.meshes, Materials(), gameObject);
         } catch(System.Exception e) {
             Debug.Log("No building here :" + floorplan[0] + " "  + e);
