@@ -46,8 +46,7 @@ public class TestManager : MonoBehaviour {
         SetupCar(context);
         SetupAnalytics();
 
-        Countdown cd = car.GetComponentInChildren<Countdown>();
-        cd.StartCountdown(3, EnableControl);
+        StartCoroutine(StartWhenReady());
     }
 
     void HandleLog(string logString, string stackTrace, LogType type) {
@@ -60,17 +59,28 @@ public class TestManager : MonoBehaviour {
         // GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
     }
 
+    IEnumerator StartWhenReady() {
+        while (!CarReady()) {
+            yield return new WaitForEndOfFrame();
+        }
+
+        Countdown cd = car.GetComponentInChildren<Countdown>();
+        cd.StartCountdown(3, EnableControl);
+    }
+
     public void EnableControl() {
         SetCarActive(true);
-        car.GetComponentInChildren<VRCameraPod>().CalibrateHeadset(); // testing: remove
-
         analytics.StartTracking();
     }
 
     private void SetCarActive(bool enabled) {
         UnityStandardAssets.Vehicles.Car.CarUserControl controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>();
-        controller.enabled = enabled;
+        controller.canMove = enabled;
         car.GetComponent<Rigidbody>().isKinematic = !enabled;
+    }
+
+    private bool CarReady() {
+        return car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>().ready;
     }
 
     private void SetupCar(int context) {

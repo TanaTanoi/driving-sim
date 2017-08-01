@@ -6,7 +6,9 @@ public class Countdown : MonoBehaviour {
 
     // Displayed once the countdown finishes
     public string startString = "GO!";
-
+    public string initialInstructions = "Left Trigger to calibrate \nRight Trigger to start.";
+    public int initialInstructionFontSize = 30;
+    private int defaultFontSize;
     private float tickDuration = 0.8f;
 
     public AudioClip tickSound;
@@ -25,10 +27,17 @@ public class Countdown : MonoBehaviour {
         StartCoroutine(DisplayCountdown(delay, function));
     }
 
-    private void Setup() {
+    void Start() {
         text = GetComponent<TextMesh>();
+        defaultFontSize = text.fontSize;
 
-        if(tickSound != null) {
+        initialInstructions = initialInstructions.Replace("\\n", "\n");
+        text.text = initialInstructions;
+        text.fontSize = initialInstructionFontSize;
+    }
+
+    private void Setup() {
+        if (tickSound != null) {
             tickSource = gameObject.AddComponent<AudioSource>();
             tickSource.clip = tickSound;
             tickSource.playOnAwake = false;

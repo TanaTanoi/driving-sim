@@ -10,21 +10,34 @@ namespace UnityStandardAssets.Vehicles.Car
         private CarController m_Car; // the car controller we want to use
         public bool keyboardOverride = false;
 
+        public bool ready = false;
+        public bool canMove = false;
+
         private void Awake()
         {
             // get the car controller
             m_Car = GetComponent<CarController>();
+            ready = false;
         }
 
 
         private void FixedUpdate() {
-
-            if (keyboardOverride) {
-                KeyboardMove();
-            } else {
-                ThrustmasterMove();
+            if (canMove) {
+                if (keyboardOverride) {
+                    KeyboardMove();
+                } else {
+                    ThrustmasterMove();
+                }
             }
+            if (!ready) {
+                if (Input.GetButtonDown("ThrustmasterLeftTrigger")) {
+                    gameObject.GetComponentInChildren<VRCameraPod>().CalibrateHeadset();
+                }
 
+                if (Input.GetButtonDown("ThrustmasterRightTrigger")) {
+                    ready = true;
+                }
+            }
         }
 
         private void ThrustmasterMove() {
