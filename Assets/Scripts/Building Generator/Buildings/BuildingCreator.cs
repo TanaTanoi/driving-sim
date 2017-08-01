@@ -8,11 +8,11 @@ public class BuildingCreator {
     // Count is not a building type, it is simply used for the enum
     public enum BuildingType { RESIDENTIAL, SKYSCRAPER, Count }
 
-    public static float FLOOR_HEIGHT = 2f;
+    public static float FLOOR_HEIGHT = 2.5f;
 
 
-    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(2, 6);
-    private static Range SKYSCRAPER_HEIGHT_RANGE = new Range(4, 12);
+    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(1, 3);
+    private static Range SKYSCRAPER_HEIGHT_RANGE = new Range(4, 6);
 
     public struct Range{
       int lowerBound;
