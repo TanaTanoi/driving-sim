@@ -9,6 +9,20 @@ public class VRContext {
     public const int SINGLE = 0;
     public const int HMD = 1;
     public const int CAVE = 2;
+
+    public static string WordForContextID(int id) {
+        switch(id) {
+            case 0:
+                return "Single Screen";
+            case 1:
+                return "Headmounted Display";
+            case 2:
+                return "CAVE";
+            default:
+                throw new Exception("Unknown Context ID " + id);
+        }
+    }
+
 }
 
 // This class runs the tests
@@ -24,6 +38,10 @@ public class TestManager : MonoBehaviour {
 
     private GameObject car;
 
+    private string terminationReason = "";
+    private string layoutName = "";
+    private string contextName = "";
+
     string output;
     string stack;
 
@@ -37,6 +55,9 @@ public class TestManager : MonoBehaviour {
     public void StartTest(int context, Texture2D layout) {
 
         //Application.RegisterLogCallback(HandleLog); // for Debugging in build mode
+
+        layoutName = layout.name;
+        contextName = VRContext.WordForContextID(context);
 
         city.map = layout;
         city.BuildCity();
@@ -125,6 +146,7 @@ public class TestManager : MonoBehaviour {
 
     // Stops tracking, destroys the car, and displays the results menu
     public void EndTest(string reason = "Unknown Reason.") {
+        terminationReason = reason;
         analytics.StopTracking();
         SetCarActive(false);
         observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(true);
@@ -132,47 +154,39 @@ public class TestManager : MonoBehaviour {
         ShowResultsMenu();
     }
 
+
+    // Consolidate with the Observer UI console display
     private string FinalResultsOverviewText(string terminationReason) {
         StringBuilder sb = new StringBuilder();
 
         sb.AppendLine("Termination Reason: " + terminationReason);
+        sb.AppendLine(String.Format("{0, -15}{1, 7}", "Context", contextName));
+        sb.AppendLine(String.Format("{0, -15}{1, 7}", "Layout", layoutName));
+
         string[] names = analytics.Names();
         string[] values = analytics.Values();
         for(int i = 0; i < names.Length; i++) {
-            sb.AppendLine(String.Format("{0, -15}{1, 4}", names[i], values[i]));
+            sb.AppendLine(String.Format("{0, -15}{1, 7}", names[i], values[i]));
         }
 
         return sb.ToString();
     }
 
-    // TODO change the way results are saved. Separate it out
     // Returns if the write was successful
     public bool SaveResults(string input) {
-        string filename = FilenameFor(input);
-        return WriteToFile(filename, analytics.Data());
-    }
+        ResultWriter writer = new ResultWriter(input, contextName, layoutName);
 
+        writer.AddData("Overview", FinalResultsOverviewText(terminationReason));
 
-    // Returns the full filename for a given name in the format:
-    //  results_name_yyyy_MM_dd_HH_mm.txt 
-    private string FilenameFor(string name) {
-        if(name.Length == 0) {
-            name = "unlabelled";
+        string[] names = analytics.Names();
+        string[] data = analytics.Data();
+        for(int i = 0; i < names.Length; i++) {
+            writer.AddData(names[i], data[i]);
         }
-        name = name.Replace(' ', '_');
-        return "results_" + name + "_" + System.DateTime.Now.ToString("yyyy_MM_dd_HH_mm") + ".txt";
+
+        return writer.WriteData();
     }
 
-    // Writes contents to a file. Returns false if it failed
-    private bool WriteToFile(string filename, string[] content) {
-        try {
-            System.IO.File.WriteAllLines(filename, content);
-        } catch( System.IO.IOException e) {
-            Debug.Log("Error - Could not write: " + e);
-            return false;
-        }
-        return true;
-    }
 
     public void ShowMainMenu() {
         SetMenuEnabled(startMenu, true);
@@ -197,5 +211,21 @@ public class TestManager : MonoBehaviour {
         canvas.interactable = enabled;
         canvas.blocksRaycasts = enabled;
         canvas.alpha = enabled ? 1 : 0;
+    }
+
+    public void TakeScreenshotOfMap(string filepath) {
+        
+        ObserverCameraController cam = GameObject.FindObjectOfType<ObserverCameraController>();
+        cam.Center();
+        ShowObserverMenu();
+
+        StartCoroutine(TakeScreenshotWhenAvailable(filepath));
+    }
+
+    private IEnumerator TakeScreenshotWhenAvailable(string filepath) {
+        yield return new WaitForSeconds(0.1f);    
+        Application.CaptureScreenshot(filepath);
+        yield return new WaitForSeconds(0.1f);
+        ShowResultsMenu();
     }
 }

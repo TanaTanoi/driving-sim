@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class AnalyticModule : MonoBehaviour {
 
-    public const string DATA_SEPERATOR = ", ";
+    public const string DATA_SEPERATOR = ",";
 
     // Tells the module to begin keeping track of what it wants
     public abstract void StartTracking();

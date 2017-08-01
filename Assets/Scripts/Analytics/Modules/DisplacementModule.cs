@@ -71,7 +71,7 @@ public class DisplacementModule : AnalyticModule {
     public override string AnalyticData() {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("Displacement Over Time:");
-        sb.AppendLine("ID, TIME, DISPLACEMENT, X, Z");
+        sb.AppendLine("ID" + DATA_SEPERATOR + "TIME" + DATA_SEPERATOR + "DISPLACEMENT" +DATA_SEPERATOR +"X" + DATA_SEPERATOR+ "Z");
         float currentTotalDistance = 0;
         Vector3 previous = positions[0];
         for(int i = 0; i < positions.Count; i++) {

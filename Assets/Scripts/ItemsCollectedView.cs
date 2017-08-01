@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 public class ItemsCollectedView : MonoBehaviour {
 
-    ItemsClearModule itemsMod;
+    ItemsCollectedModule itemsMod;
     TextMesh text;
 	// Use this for initialization
 	void Start () {
-        itemsMod = FindObjectOfType<ItemsClearModule>();
+        itemsMod = FindObjectOfType<ItemsCollectedModule>();
         text = GetComponent<TextMesh>();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
         if(itemsMod != null) {
-            text.text = PaddedNumber(itemsMod.CollectedItemsCount()) + " / " + PaddedNumber(itemsMod.TotalItems);
+            text.text = PaddedNumber(itemsMod.ItemsCollected) + " / " + PaddedNumber(itemsMod.TotalItems);
         } else {
             text.text = "Error";
         }

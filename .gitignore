@@ -22,7 +22,6 @@ fmod_editor.log
 
 # Unity3D generated meta files
 *.pidb.meta
-
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
@@ -32,3 +31,5 @@ sysinfo.txt
 .DS_STORE
 desktop.ini
 ProjectSettings/ProjectVersion.txt
+# Results from the testing
+/results/

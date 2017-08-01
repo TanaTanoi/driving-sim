@@ -9,13 +9,9 @@ public class ItemsClearModule : TerminationModule {
 
     private ItemsCollectedModule itemsMod;
 
-    private int totalItems;
-
-    public int TotalItems { get { return totalItems; } }
-
     public override string TerminationReason {
         get {
-            return "Target percentage ("+ targetProgress +"% of " + totalItems +") of items collected.";
+            return "Target percentage ("+ targetProgress +"% of " + TotalItems() +") of items collected.";
         }
     }
 
@@ -25,15 +21,17 @@ public class ItemsClearModule : TerminationModule {
     }
 
     public override bool TestOver() {
-        return (float)CollectedItemsCount() / (float)totalItems >= (targetProgress / 100f)   ;
+        return (float)CollectedItemsCount() / (float)TotalItems() >= (targetProgress / 100f)   ;
     }
 
     public int CollectedItemsCount() {
         return itemsMod.ItemsCollected;
     }
 
+    public int TotalItems() {
+        return itemsMod.TotalItems;
+    }
+
     public override void Setup() {
-        totalItems = FindObjectsOfType<Item>().Length;
-        Debug.Log("Getting this many " + totalItems);
     }
 }
