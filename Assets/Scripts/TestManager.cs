@@ -47,7 +47,7 @@ public class TestManager : MonoBehaviour {
         SetupAnalytics();
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
-        cd.StartCountdown(1, EnableControl);
+        cd.StartCountdown(3, EnableControl);
     }
 
     void HandleLog(string logString, string stackTrace, LogType type) {

@@ -19,7 +19,7 @@ public class SteeringWheelMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        desiredAngle = Input.GetAxisRaw("Horizontal") * -1;
+        desiredAngle = Input.GetAxisRaw("ThrustmasterWheel") * -1;
         currentAngle += (desiredAngle - currentAngle) * 0.4f;
         transform.localRotation = restPosition * Quaternion.Euler(Vector3.forward * currentAngle * sensitivity);
 	}

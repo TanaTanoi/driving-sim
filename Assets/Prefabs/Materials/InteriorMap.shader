@@ -139,7 +139,8 @@ Shader "Unlit/InteriorMap"
 				bool didIntersect = IntersectionAgainstPlane(i.pos.xyz, rayDirection, planePos, ceilNormal, inter);
 
 				float3 backinter;
-				IntersectionAgainstPlane(i.pos.xyz, rayDirection, i.pos - i.normal * 2, i.normal, backinter);
+				//
+				IntersectionAgainstPlane(i.pos.xyz, rayDirection, i.pos - i.normal * 4, i.normal, backinter);
 				float4 col;
 				/* Interior */
 				// Use backwall its intersection is closer
