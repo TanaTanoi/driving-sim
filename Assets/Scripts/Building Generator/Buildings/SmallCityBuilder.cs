@@ -24,15 +24,15 @@ public class SmallCityBuilder : MonoBehaviour {
         Debug.Log("Reading map. " + map.width + " " + map.height);
         pixels = map.GetPixels();
 
-        GameObject buildings = new GameObject("Buildings");
-        buildings.transform.parent = transform;
+        GameObject tempBuildings = new GameObject("Temp");
+        tempBuildings.transform.parent = transform;
         GameObject items = new GameObject("Items");
         items.transform.parent = transform;
 
         for(int i = 0; i < map.width; i++){
             for(int j = 0; j < map.height; j++){
                 if(ColorAt(i, j) == buildingColour){
-                    CreateBuildingAt(i, j, DirsForPixel(i, j), buildings.transform);
+                    CreateBuildingAt(i, j, DirsForPixel(i, j), tempBuildings.transform);
                 } else if(ColorAt(i, j) == itemColour) {
                     PlaceItem(items.transform, i, j);
                 } else if(ColorAt(i, j) == startColour) {
@@ -41,6 +41,12 @@ public class SmallCityBuilder : MonoBehaviour {
                 }
             }
         }
+
+        GameObject newBuildings = new GameObject("Buildings");
+        newBuildings.transform.parent = transform;
+
+
+
         Debug.Log("Finished reading");
     }
 
@@ -62,6 +68,38 @@ public class SmallCityBuilder : MonoBehaviour {
         }
         throw new System.Exception("No start position on this layout! Please use a different one.");
     }
+
+    private void OptimiseCity(GameObject buildings, GameObject parent) {
+
+        Dictionary<string, List<Mesh>> meshes = new Dictionary<string, List<Mesh>>();
+        Dictionary<string, Material> materials = new Dictionary<string, Material>();
+
+        for(int i = 0; i < buildings.transform.childCount; i++){
+            GameObject building = buildings.transform.GetChild(i).gameObject;
+            for(int j = 0; j < building.transform.childCount ; j++){
+                GameObject component = building.transform.GetChild(j).gameObject;
+                MeshRenderer ren = component.GetComponent<MeshRenderer>();
+                Mesh m = component.GetComponent<MeshFilter>().mesh;
+                if (!meshes.ContainsKey(ren.material.name)){
+                    meshes[ren.material.name] = new List<Mesh>();
+                    materials[ren.material.name] = ren.material;
+                }
+                meshes[ren.material.name].Add(m);
+            }
+        }
+
+
+        List<Mesh> finalMeshes = new List<Mesh>();
+        List<GameObject> finalObjects = new List<GameObject>();
+        foreach (KeyValuePair<string, List<Mesh>> pair in meshes){
+
+            GameObject block = new GameObject("Buldings " + pair.Key);
+            block.AddComponent<MeshFilter>().mesh = MeshCreator.CombineMeshes(pair.Value);
+            block.AddComponent<MeshRenderer>().material = materials[pair.Key];
+            block.transform.parent = parent.transform;
+        }
+    }
+
 
     private void PlaceItem(Transform  parent, int x, int y) {
         GameObject newItem = Instantiate(item);

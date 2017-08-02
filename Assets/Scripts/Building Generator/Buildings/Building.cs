@@ -36,6 +36,7 @@ public class Building : MonoBehaviour {
         //Debug.Log(sb.ToString());
         try {
             MeshCreator.WallMesh wallmesh = BuildingCreator.CreateBuilding(floorplan, type, validFaces);
+            //wallmesh.CombineMeshes(2, 3)
             MeshCreator.AssignMeshesToGameObjects(wallmesh.meshes, Materials(), gameObject);
         } catch(System.Exception e) {
             Debug.Log("No building here :" + floorplan[0] + " "  + e);

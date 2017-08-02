@@ -34,6 +34,15 @@ public class MeshCreator {
         public int Count() {
             return meshes.Count;
         }
+
+        public void CombineMeshes(int a, int b) {
+            Mesh first = meshes[a];
+            Mesh second = meshes[b];
+            meshes.RemoveAt(Mathf.Max(a, b));
+            meshes.RemoveAt(Mathf.Min(a, b));
+
+            meshes.Insert(a, MeshCreator.CombineMeshes(new List<Mesh> { first, second }));
+        }
     }
 
     public struct RawMesh {
