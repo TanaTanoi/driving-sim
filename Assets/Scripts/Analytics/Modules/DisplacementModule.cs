@@ -49,7 +49,7 @@ public class DisplacementModule : AnalyticModule {
         this.target = target;
     }
 
-    public override void StartTracking() {
+    protected override void EnableTracking() {
         tracking = true;
         positions.Clear();
         positions.Add(target.transform.position);

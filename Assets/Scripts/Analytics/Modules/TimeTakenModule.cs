@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class TimeTakenModule : AnalyticModule {
 
-    private float startTime = 0;
-
-    public override void StartTracking() {
-        startTime = Time.unscaledTime;
+    protected override void EnableTracking() {
     }
 
     public float CurrentTime() {
-        return Time.unscaledTime - startTime;
+        return Time.time - StartTime;
     }
 
     public override void StopTracking() {

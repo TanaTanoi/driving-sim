@@ -6,8 +6,17 @@ public abstract class AnalyticModule : MonoBehaviour {
 
     public const string DATA_SEPERATOR = ",";
 
+    public float StartTime { get { return startTime; } }
+
+    private float startTime;
+    
+    public void StartTracking() {
+        startTime = Time.time;
+        EnableTracking();
+    }
+
     // Tells the module to begin keeping track of what it wants
-    public abstract void StartTracking();
+    protected abstract void EnableTracking();
 
     // Tells the module to stop keeping track of what it wants
     public abstract void StopTracking();

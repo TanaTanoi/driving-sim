@@ -7,7 +7,6 @@ public class ItemsCollectedModule : AnalyticModule {
 
     private int itemsCollected = 0;
     private List<float> itemCollectionTimes;
-    private float startTime = 0;
     private int totalItems;
 
     public int ItemsCollected { get { return itemsCollected; } }
@@ -15,13 +14,12 @@ public class ItemsCollectedModule : AnalyticModule {
 
     public void CollectItem() {
         itemsCollected++;
-        itemCollectionTimes.Add(Time.time - startTime);
+        itemCollectionTimes.Add(Time.time - StartTime);
     }
 
-    public override void StartTracking() {
+    protected override void EnableTracking() {
         itemsCollected = 0;
         itemCollectionTimes = new List<float>();
-        startTime = Time.time;
         totalItems = FindObjectsOfType<Item>().Length;
     }
 

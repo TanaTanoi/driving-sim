@@ -16,8 +16,6 @@ public class HeadTurnsModule : AnalyticModule {
     private bool turning = false;
     private bool tracking = false;
 
-    private float startTime;
-
     private List<float> turnTimes;
     private List<float> turnDurations;
     private List<bool> turnDirection; // false for left, true for right
@@ -25,7 +23,7 @@ public class HeadTurnsModule : AnalyticModule {
 	// Update is called once per frame
 	void FixedUpdate () {
         if (tracking) {
-            float currTime = Time.time - startTime;
+            float currTime = Time.time - StartTime;
             if (currTime - previousTime > pollTime) {
                 previousTime = currTime;
                 Vector2 dir = DirectionFromVec3(headset.forward);
@@ -45,14 +43,13 @@ public class HeadTurnsModule : AnalyticModule {
         headset = h;
     }
 
-    public override void StartTracking(){
+    protected override void EnableTracking(){
         tracking = true;
         turning = false;
         turnTimes = new List<float>();
         turnDurations = new List<float>();
         turnDirection = new List<bool>();
-        startTime = Time.time;
-        previousTime = Time.time - startTime;
+        previousTime = Time.time - StartTime;
     }
 
     private void AddTurnDuration(float currentTime) {
@@ -62,7 +59,7 @@ public class HeadTurnsModule : AnalyticModule {
     public override void StopTracking(){
         tracking = false;
         if(turnTimes.Count != turnDurations.Count) {
-            AddTurnDuration(Time.time - startTime);
+            AddTurnDuration(Time.time - StartTime);
         }
     }
 
