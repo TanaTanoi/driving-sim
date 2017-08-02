@@ -78,6 +78,12 @@ public class SmallCityBuilder : MonoBehaviour {
 
         for(int i = 0; i < buildings.transform.childCount; i++){
             GameObject building = buildings.transform.GetChild(i).gameObject;
+            BoxCollider collider = building.GetComponent<BoxCollider>();
+
+            BoxCollider newCollider = parent.AddComponent<BoxCollider>();
+            newCollider.center = collider.center;
+            newCollider.size = collider.size;
+
             for(int j = 0; j < building.transform.childCount ; j++){
                 GameObject component = building.transform.GetChild(j).gameObject;
                 MeshRenderer ren = component.GetComponent<MeshRenderer>();
