@@ -44,4 +44,8 @@ public class VRCameraPod : MonoBehaviour {
         GameObject headsetCamera = headsetCameraWrapper.transform.GetChild(0).gameObject;
         headsetCameraWrapper.transform.position += (idealHeadsetPosition.position - headsetCamera.transform.position);
     }
+
+    public Transform GetHeadsetTransform() {
+        return headsetCameraWrapper.transform.GetChild(0);
+    }
 }

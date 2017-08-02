@@ -97,8 +97,6 @@ public class SmallCityBuilder : MonoBehaviour {
         }
 
 
-        List<Mesh> finalMeshes = new List<Mesh>();
-        List<GameObject> finalObjects = new List<GameObject>();
         foreach (KeyValuePair<string, List<Mesh>> pair in meshes){
 
             GameObject block = new GameObject("Buldings " + pair.Key);

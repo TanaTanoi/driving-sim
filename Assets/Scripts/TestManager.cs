@@ -40,7 +40,7 @@ public class TestManager : MonoBehaviour {
 
     private string terminationReason = "";
     private string layoutName = "";
-    private string contextName = "";
+    private int contextID;
 
     string output;
     string stack;
@@ -57,7 +57,7 @@ public class TestManager : MonoBehaviour {
         //Application.RegisterLogCallback(HandleLog); // for Debugging in build mode
 
         layoutName = layout.name;
-        contextName = VRContext.WordForContextID(context);
+        contextID = context;
 
         city.map = layout;
         city.BuildCity();
@@ -126,11 +126,19 @@ public class TestManager : MonoBehaviour {
     private void SetupAnalytics() {
 
         analytics.SetupTracking();
-        
+
+        VRCameraPod cameras = car.GetComponentInChildren<VRCameraPod>();
+
         // Ensure modules have required stuff, if equipt
         DisplacementModule dm = analytics.gameObject.GetComponent<DisplacementModule>();
         if(dm != null) {
             dm.SetTarget(car);
+        }
+
+        HeadTurnsModule htm = analytics.gameObject.GetComponent<HeadTurnsModule>();
+        if(htm != null){
+            htm.SetHeadset(cameras.GetHeadsetTransform());
+            htm.enabled = contextID == VRContext.HMD;
         }
     }
 
@@ -160,7 +168,7 @@ public class TestManager : MonoBehaviour {
         StringBuilder sb = new StringBuilder();
 
         sb.AppendLine("Termination Reason: " + terminationReason);
-        sb.AppendLine(String.Format("{0, -15}{1, 7}", "Context", contextName));
+        sb.AppendLine(String.Format("{0, -15}{1, 7}", "Context", VRContext.WordForContextID(contextID)));
         sb.AppendLine(String.Format("{0, -15}{1, 7}", "Layout", layoutName));
 
         string[] names = analytics.Names();
@@ -174,7 +182,7 @@ public class TestManager : MonoBehaviour {
 
     // Returns if the write was successful
     public bool SaveResults(string input) {
-        ResultWriter writer = new ResultWriter(input, contextName, layoutName);
+        ResultWriter writer = new ResultWriter(input, VRContext.WordForContextID(contextID), layoutName);
 
         writer.AddData("Overview", FinalResultsOverviewText(terminationReason));
 
