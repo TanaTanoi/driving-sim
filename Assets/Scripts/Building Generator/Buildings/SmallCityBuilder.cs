@@ -100,7 +100,32 @@ public class SmallCityBuilder : MonoBehaviour {
         foreach (KeyValuePair<string, List<Mesh>> pair in meshes){
 
             GameObject block = new GameObject("Buldings " + pair.Key);
-            block.AddComponent<MeshFilter>().mesh = MeshCreator.CombineMeshes(pair.Value);
+
+            List<Mesh> meshSet = new List<Mesh>();
+            int vertCount = 0;
+            int count = 1;
+            while(pair.Value.Count > 0) {
+                Mesh m = pair.Value[pair.Value.Count - 1];
+                pair.Value.RemoveAt(pair.Value.Count - 1);
+                if(vertCount + m.vertexCount > 64000) {
+                    // reset if too many verts in this mesh set
+                    block.AddComponent<MeshFilter>().mesh = MeshCreator.CombineMeshes(meshSet);
+                    block.AddComponent<MeshRenderer>().material = materials[pair.Key];
+                    block.transform.parent = parent.transform;
+                    block = new GameObject("Buildings " + pair.Key + " " + count);
+                    count++;
+
+                    meshSet = new List<Mesh>();
+                    
+                    vertCount = m.vertexCount;
+                } else {
+                    // else add its vert count
+                    vertCount += m.vertexCount;
+                }
+                meshSet.Add(m);
+            }
+
+            block.AddComponent<MeshFilter>().mesh = MeshCreator.CombineMeshes(meshSet);
             block.AddComponent<MeshRenderer>().material = materials[pair.Key];
             block.transform.parent = parent.transform;
         }
@@ -140,22 +165,22 @@ public class SmallCityBuilder : MonoBehaviour {
             }, 1);
 
         List<int> validFaces = new List<int> { 0, 1, 2, 3 };
-        if (x + 1 >= map.width || ColorAt(x + 1, y) == noDrawColor || ColorAt(x + 1, y) == buildingColour) {
+        if (IsNoDrawPixel(x + 1, y)) {
             // right
             validFaces.Remove(1);
         }
 
-        if (x - 1 < 0 || ColorAt(x - 1, y) == noDrawColor || ColorAt(x - 1, y) == buildingColour) {
+        if (IsNoDrawPixel(x - 1, y)) {
             // left
             validFaces.Remove(3);
         }
 
-        if (y + 1 >= map.height || ColorAt(x, y + 1) == noDrawColor || ColorAt(x, y + 1) == buildingColour) {
+        if (IsNoDrawPixel(x, y + 1)) {
             // up
             validFaces.Remove(0);
         }
 
-        if (y - 1 < 0 || ColorAt(x, y - 1) == noDrawColor || ColorAt(x, y - 1) == buildingColour) {
+        if (IsNoDrawPixel(x, y - 1)) {
             //down 
             validFaces.Remove(2);
         }
@@ -189,6 +214,11 @@ public class SmallCityBuilder : MonoBehaviour {
         block.transform.parent = building.transform;
     }
 
+
+    private bool IsNoDrawPixel(float x, float y) {
+        return x < 0 || x >= map.width || y < 0 || y >= map.height || 
+            ColorAt(x, y) == noDrawColor;
+    }
     private void DestroyChildren() {
         while (transform.childCount > 0) {
             GameObject.DestroyImmediate(transform.GetChild(0).gameObject);

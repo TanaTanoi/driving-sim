@@ -11,7 +11,7 @@ public class BuildingCreator {
     public static float FLOOR_HEIGHT = 2f;
 
 
-    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(3, 3);
+    private static Range RESIDENTIAL_HEIGHT_RANGE = new Range(1, 3);
     private static Range SKYSCRAPER_HEIGHT_RANGE = new Range(4, 6);
 
     public struct Range{
