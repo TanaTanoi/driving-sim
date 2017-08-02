@@ -45,7 +45,9 @@ public class SmallCityBuilder : MonoBehaviour {
         GameObject newBuildings = new GameObject("Buildings");
         newBuildings.transform.parent = transform;
 
+        OptimiseCity(tempBuildings, newBuildings);
 
+        Destroy(tempBuildings);
 
         Debug.Log("Finished reading");
     }
