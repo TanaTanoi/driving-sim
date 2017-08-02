@@ -12,8 +12,8 @@ public class ObserverUI : MonoBehaviour {
     public const string IN = "IN";
     public const string OUT = "OUT";
 
-    private const float ACCELERATION_TIME_THRESHOLD = 1f;
-    private const float MOVE_ACCELERATION_SPEED = 0.7f;
+    private const float ACCELERATION_TIME_THRESHOLD = 0.7f;
+    private const float MOVE_ACCELERATION_SPEED = 4f;
     private const float MOVE_ACCELERATION_DEFAULT = 2f;
 
     private const float ZOOM_ACCELERATION_SPEED = 0.2f;
@@ -36,6 +36,8 @@ public class ObserverUI : MonoBehaviour {
     private LocatorBecon becon;
 
     private bool followCar = false;
+
+    private bool overrideCar = false; // Enables keyboard control
 
     void Start() {
         manager = FindObjectOfType<TestManager>();
@@ -129,6 +131,11 @@ public class ObserverUI : MonoBehaviour {
 
     public void SetConsoleText(string text) {
         consoleBox.text = text;
+    }
+
+    public void OverrideCarPressed() {
+        overrideCar = !overrideCar;
+        manager.EnableKeyboardOverride(overrideCar);
     }
 
     private void FindBecon() {

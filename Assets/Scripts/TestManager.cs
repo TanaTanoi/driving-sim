@@ -86,22 +86,29 @@ public class TestManager : MonoBehaviour {
         }
 
         Countdown cd = car.GetComponentInChildren<Countdown>();
-        cd.StartCountdown(3, EnableControl);
+        cd.StartCountdown(3, EnableCarControl);
     }
 
-    public void EnableControl() {
+    public void EnableCarControl() {
         SetCarActive(true);
         analytics.StartTracking();
     }
 
     private void SetCarActive(bool enabled) {
-        UnityStandardAssets.Vehicles.Car.CarUserControl controller = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>();
-        controller.canMove = enabled;
+        CarUserControl().canMove = enabled;
         car.GetComponent<Rigidbody>().isKinematic = !enabled;
     }
 
     private bool CarReady() {
-        return car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>().ready;
+        return CarUserControl().ready;
+    }
+
+    public void EnableKeyboardOverride(bool enabled) {
+        CarUserControl().keyboardOverride = enabled;
+    }
+
+    private UnityStandardAssets.Vehicles.Car.CarUserControl CarUserControl() {
+        return car.GetComponent<UnityStandardAssets.Vehicles.Car.CarUserControl>();
     }
 
     private void SetupCar(int context) {
