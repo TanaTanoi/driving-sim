@@ -8,7 +8,6 @@ public class DisplacementModule : AnalyticModule {
     public GameObject target;
     private List<Vector3> positions;
 
-    private bool tracking = false;
     // Time between taking positions
     private const float TIME_DELTA = 0.2f;
     private float distanceTravelled = 0;
@@ -19,29 +18,18 @@ public class DisplacementModule : AnalyticModule {
         positions = new List<Vector3>();
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-		if(tracking) {
-            if(target == null) {
-                throw new System.Exception("This module requires a target!");
-            }
-            Vector3 current = target.transform.position;
-            Vector3 last = positions[positions.Count - 1];
-            float distance = (current - last).magnitude;
-            if(Time.time - time > TIME_DELTA) {
-                distanceTravelled += distance;
-                positions.Add(target.transform.position);
-
-                time += TIME_DELTA;
-            }
+    protected override void Track() {
+        if(target == null) {
+            throw new System.Exception("This module requires a target!");
         }
-	}
+        Vector3 current = target.transform.position;
+        Vector3 last = positions[positions.Count - 1];
+        float distance = (current - last).magnitude;
+        if(Time.time - time > TIME_DELTA) {
+            distanceTravelled += distance;
+            positions.Add(target.transform.position);
 
-    void Update() {
-        if(tracking) {
-            for(int i = 0; i < positions.Count - 1; i++) {
-                Debug.DrawLine(positions[i], positions[i + 1], Color.red);
-            }
+            time += TIME_DELTA;
         }
     }
 
@@ -50,7 +38,6 @@ public class DisplacementModule : AnalyticModule {
     }
 
     protected override void EnableTracking() {
-        tracking = true;
         positions.Clear();
         positions.Add(target.transform.position);
         time = Time.time;

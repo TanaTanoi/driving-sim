@@ -8,12 +8,23 @@ public abstract class AnalyticModule : MonoBehaviour {
 
     public float StartTime { get { return startTime; } }
 
+    protected bool tracking = false;
+
     private float startTime;
     
+    void FixedUpdate() {
+        if(tracking) {
+            Track();
+        }
+    }
+
     public void StartTracking() {
         startTime = Time.time;
+        tracking = true;
         EnableTracking();
     }
+
+    protected abstract void Track();
 
     // Tells the module to begin keeping track of what it wants
     protected abstract void EnableTracking();

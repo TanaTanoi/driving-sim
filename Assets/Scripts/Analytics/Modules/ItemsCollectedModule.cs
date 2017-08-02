@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -47,4 +48,7 @@ public class ItemsCollectedModule : AnalyticModule {
         return sb.ToString();
     }
 
+    protected override void Track() {
+        return; // requires no active tracking
+    }
 }

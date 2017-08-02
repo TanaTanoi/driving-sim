@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class TimeTakenModule : AnalyticModule {
 
-    protected override void EnableTracking() {
-    }
+    protected override void EnableTracking() {} // No requirements
 
     public float CurrentTime() {
         return Time.time - StartTime;
     }
 
-    public override void StopTracking() {
-        // Nothing to stop tracking
-    }
+    public override void StopTracking() {}// No active tracking
 
     public override string AnalyticName() {
         return "Time Taken";
@@ -27,4 +24,6 @@ public class TimeTakenModule : AnalyticModule {
     public override string AnalyticData() {
         return AnalyticName() + " : " + AnalyticValue();
     }
+
+    protected override void Track() {}// Requires no active tracking
 }

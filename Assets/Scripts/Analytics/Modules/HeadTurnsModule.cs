@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using System;
 
 public class HeadTurnsModule : AnalyticModule {
 
@@ -14,27 +15,23 @@ public class HeadTurnsModule : AnalyticModule {
     private float previousTime;
 
     private bool turning = false;
-    private bool tracking = false;
 
     private List<float> turnTimes;
     private List<float> turnDurations;
     private List<bool> turnDirection; // false for left, true for right
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        if (tracking) {
-            float currTime = Time.time - StartTime;
-            if (currTime - previousTime > pollTime) {
-                previousTime = currTime;
-                Vector2 dir = DirectionFromVec3(headset.forward);
-                if (!turning && HasTurned(dir)) {
-                    turning = true;
-                    turnTimes.Add(currTime);
-                    turnDirection.Add(TurnDirection(dir));
-                } else if (turning && !HasTurned(dir)) {
-                    AddTurnDuration(currTime);
-                    turning = false;
-                }
+
+    protected override void Track() {
+        float currTime = Time.time - StartTime;
+        if (currTime - previousTime > pollTime) {
+            previousTime = currTime;
+            Vector2 dir = DirectionFromVec3(headset.forward);
+            if (!turning && HasTurned(dir)) {
+                turning = true;
+                turnTimes.Add(currTime);
+                turnDirection.Add(TurnDirection(dir));
+            } else if (turning && !HasTurned(dir)) {
+                AddTurnDuration(currTime);
+                turning = false;
             }
         }
     }
