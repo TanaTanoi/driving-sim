@@ -20,6 +20,7 @@ public class HeadTurnsModule : AnalyticModule {
 
     private List<float> turnTimes;
     private List<float> turnDurations;
+    private List<bool> turnDirection; // false for left, true for right
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -31,6 +32,7 @@ public class HeadTurnsModule : AnalyticModule {
                 if (!turning && HasTurned(dir)) {
                     turning = true;
                     turnTimes.Add(currTime);
+                    turnDirection.Add(TurnDirection(dir));
                 } else if (turning && !HasTurned(dir)) {
                     AddTurnDuration(currTime);
                     turning = false;
@@ -48,6 +50,7 @@ public class HeadTurnsModule : AnalyticModule {
         turning = false;
         turnTimes = new List<float>();
         turnDurations = new List<float>();
+        turnDirection = new List<bool>();
         startTime = Time.time;
         previousTime = Time.time - startTime;
     }
@@ -75,11 +78,13 @@ public class HeadTurnsModule : AnalyticModule {
         // Outputs when an item was collected
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("Head turns over time:");
-        sb.AppendLine("ID" + DATA_SEPERATOR + "TIME" + DATA_SEPERATOR + "DURATION");
 
-        for (int i = 0; i < turnTimes.Count; i++)
-        {
-            sb.AppendLine(i + DATA_SEPERATOR + turnTimes[i] + DATA_SEPERATOR + turnDurations[i]);
+
+        sb.AppendLine("ID" + DATA_SEPERATOR + "TIME" + DATA_SEPERATOR + "DURATION" + DATA_SEPERATOR + "DIRECTION");
+
+        for (int i = 0; i < turnTimes.Count; i++) {
+            string direction = turnDirection[i] ? "RIGHT" : "LEFT";
+            sb.AppendLine(i + DATA_SEPERATOR + turnTimes[i] + DATA_SEPERATOR + turnDurations[i] + DATA_SEPERATOR + direction);
         }
 
         return sb.ToString();
@@ -88,6 +93,13 @@ public class HeadTurnsModule : AnalyticModule {
 
     private Vector2 DirectionFromVec3(Vector3 input){
         return new Vector2(input.x, input.z).normalized;
+    }
+
+    // Returns false for left, true for right
+    private bool TurnDirection(Vector2 dir) {
+        Vector2 parentRight = DirectionFromVec3(headset.parent.right);
+        float dot = Vector2.Dot(dir, parentRight);
+        return dot > 0;
     }
 
     private bool HasTurned(Vector2 dir){
