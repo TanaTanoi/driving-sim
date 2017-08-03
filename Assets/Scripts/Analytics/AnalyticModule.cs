@@ -8,6 +8,8 @@ public abstract class AnalyticModule : MonoBehaviour {
 
     public float StartTime { get { return startTime; } }
 
+    public bool Tracking {  get { return tracking; } }
+
     protected bool tracking = false;
 
     private float startTime;

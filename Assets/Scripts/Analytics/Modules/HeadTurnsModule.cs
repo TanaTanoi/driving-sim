@@ -12,6 +12,7 @@ public class HeadTurnsModule : AnalyticModule {
     public float pollTime = 0.1f;
 
     private Transform headset;
+    public Transform Headset { get { return headset; } }
     private float previousTime;
 
     private bool turning = false;
@@ -19,6 +20,8 @@ public class HeadTurnsModule : AnalyticModule {
     private List<float> turnTimes;
     private List<float> turnDurations;
     private List<bool> turnDirection; // false for left, true for right
+
+    public List<bool> TurnDirections { get { return turnDirections; } }
 
     protected override void Track() {
         float currTime = Time.time - StartTime;
