@@ -29,11 +29,10 @@ namespace UnityStandardAssets.Vehicles.Car
                     ThrustmasterMove();
                 }
             }
+            if (Input.GetButtonDown("ThrustmasterLeftTrigger")) {
+                gameObject.GetComponentInChildren<VRCameraPod>().CalibrateHeadset();
+            }
             if (!ready) {
-                if (Input.GetButtonDown("ThrustmasterLeftTrigger")) {
-                    gameObject.GetComponentInChildren<VRCameraPod>().CalibrateHeadset();
-                }
-
                 if (Input.GetButtonDown("ThrustmasterRightTrigger")) {
                     ready = true;
                 }
@@ -44,8 +43,12 @@ namespace UnityStandardAssets.Vehicles.Car
             // pass the input to the car!
             float h = CrossPlatformInputManager.GetAxis("ThrustmasterWheel");
             float v = CrossPlatformInputManager.GetAxis("ThrustmasterAccelerate") + 1; // 0 to 2
-            float footbreak = (CrossPlatformInputManager.GetAxis("ThrustmasterClutch") + 1) * -1; // -2 to 0
+            float footbreak = (CrossPlatformInputManager.GetAxis("ThrustmasterClutch") + 1); // -2 to 0
             float handbrake = CrossPlatformInputManager.GetAxis("ThrustmasterBreak") + 1; // 0 to 2
+
+            footbreak = (v - footbreak) / -2f; // ensures that footbreak can't be 1 if gas is applied
+            v /= 2f;
+            handbrake /= 2f;
 
             //Debug.Log("Wheel " + h + " Accelerate " + v + " Footbreak  " + footbreak + " handbreak " + handbrake);
             m_Car.Move(h, v, footbreak, handbrake);

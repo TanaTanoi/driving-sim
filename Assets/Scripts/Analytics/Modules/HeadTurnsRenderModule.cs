@@ -10,12 +10,12 @@ public class HeadTurnsRenderModule : AnalyticsViewModule
 
     private GameObject arrowSegments;
     private int currentSegments;
-    private HeadTurnModule headturnmod;
+    private HeadTurnsModule headturnmod;
 
     private static Vector3 OFFSET = Vector3.up * 0.5f;
 
     void FixedUpdate(){
-        if (headturnmod.Tracking && headturnmod.turnDirection > currentSegments){
+        if (headturnmod.Tracking && headturnmod.TurnDirections.Count > currentSegments){
             // add latest segment
             bool latestDir = headturnmod.TurnDirections[headturnmod.TurnDirections.Count - 1];
             currentSegments++;
@@ -28,7 +28,7 @@ public class HeadTurnsRenderModule : AnalyticsViewModule
     }
 
     public override void StartDisplay() {
-        headturnmod = GetComponent<HeadTurnModule>();
+        headturnmod = GetComponent<HeadTurnsModule>();
         currentSegments = 0;
     }
 

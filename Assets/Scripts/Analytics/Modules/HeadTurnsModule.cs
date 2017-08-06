@@ -19,7 +19,7 @@ public class HeadTurnsModule : AnalyticModule {
 
     private List<float> turnTimes;
     private List<float> turnDurations;
-    private List<bool> turnDirection; // false for left, true for right
+    private List<bool> turnDirections; // false for left, true for right
 
     public List<bool> TurnDirections { get { return turnDirections; } }
 
@@ -31,7 +31,7 @@ public class HeadTurnsModule : AnalyticModule {
             if (!turning && HasTurned(dir)) {
                 turning = true;
                 turnTimes.Add(currTime);
-                turnDirection.Add(TurnDirection(dir));
+                turnDirections.Add(TurnDirection(dir));
             } else if (turning && !HasTurned(dir)) {
                 AddTurnDuration(currTime);
                 turning = false;
@@ -48,7 +48,7 @@ public class HeadTurnsModule : AnalyticModule {
         turning = false;
         turnTimes = new List<float>();
         turnDurations = new List<float>();
-        turnDirection = new List<bool>();
+        turnDirections = new List<bool>();
         previousTime = Time.time - StartTime;
     }
 
@@ -56,7 +56,7 @@ public class HeadTurnsModule : AnalyticModule {
         turnDurations.Add(currentTime - turnTimes[turnTimes.Count - 1]);
     }
 
-    public override void StopTracking(){
+    public override void DisableTracking(){
         tracking = false;
         if(turnTimes.Count != turnDurations.Count) {
             AddTurnDuration(Time.time - StartTime);
@@ -80,7 +80,7 @@ public class HeadTurnsModule : AnalyticModule {
         sb.AppendLine("ID" + DATA_SEPERATOR + "TIME" + DATA_SEPERATOR + "DURATION" + DATA_SEPERATOR + "DIRECTION");
 
         for (int i = 0; i < turnTimes.Count; i++) {
-            string direction = turnDirection[i] ? "RIGHT" : "LEFT";
+            string direction = turnDirections[i] ? "RIGHT" : "LEFT";
             sb.AppendLine(i + DATA_SEPERATOR + turnTimes[i] + DATA_SEPERATOR + turnDurations[i] + DATA_SEPERATOR + direction);
         }
 

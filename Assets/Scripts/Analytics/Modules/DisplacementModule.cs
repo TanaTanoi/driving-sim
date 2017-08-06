@@ -43,7 +43,7 @@ public class DisplacementModule : AnalyticModule {
         time = Time.time;
     }
 
-    public override void StopTracking() {
+    public override void DisableTracking() {
         tracking = false;
     }
 

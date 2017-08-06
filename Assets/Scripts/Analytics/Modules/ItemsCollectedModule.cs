@@ -24,7 +24,7 @@ public class ItemsCollectedModule : AnalyticModule {
         totalItems = FindObjectsOfType<Item>().Length;
     }
 
-    public override void StopTracking() {
+    public override void DisableTracking() {
     }
 
     public override string AnalyticName() {
