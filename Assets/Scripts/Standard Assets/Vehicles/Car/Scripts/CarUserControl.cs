@@ -46,9 +46,10 @@ namespace UnityStandardAssets.Vehicles.Car
             float footbreak = (CrossPlatformInputManager.GetAxis("ThrustmasterClutch") + 1); // -2 to 0
             float handbrake = CrossPlatformInputManager.GetAxis("ThrustmasterBreak") + 1; // 0 to 2
 
-            footbreak = (v - footbreak) / -2f; // ensures that footbreak can't be 1 if gas is applied
-            v /= 2f;
-            handbrake /= 2f;
+            //footbreak = (v - footbreak) / -2f; // ensures that footbreak can't be 1 if gas is applied
+            footbreak = Mathf.Min(footbreak - v, footbreak) * -0.5f;
+            v *= 0.5f;
+            handbrake *= 0.5f;
 
             //Debug.Log("Wheel " + h + " Accelerate " + v + " Footbreak  " + footbreak + " handbreak " + handbrake);
             m_Car.Move(h, v, footbreak, handbrake);

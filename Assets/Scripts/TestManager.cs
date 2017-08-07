@@ -230,16 +230,35 @@ public class TestManager : MonoBehaviour {
 
     public void TakeScreenshotOfMap(string filepath) {
         
-        ObserverCameraController cam = GameObject.FindObjectOfType<ObserverCameraController>();
-        cam.Center();
-        ShowObserverMenu();
+        observerMenu.GetComponent<ObserverUI>().StopCameraFollowCar();
+
 
         StartCoroutine(TakeScreenshotWhenAvailable(filepath));
     }
 
     private IEnumerator TakeScreenshotWhenAvailable(string filepath) {
-        yield return new WaitForSeconds(0.1f);    
-        Application.CaptureScreenshot(filepath);
+        ObserverCameraController cam = GameObject.FindObjectOfType<ObserverCameraController>();
+        cam.Center();
+        ShowObserverMenu();
+        yield return new WaitForSeconds(0.3f);
+        //Application.CaptureScreenshot(filepath);
+        yield return new WaitForEndOfFrame();
+        RenderTexture rt = new RenderTexture(Screen.width, Screen.height, 16);
+        cam.GetComponent<Camera>().targetTexture = rt;
+        RenderTexture.active = rt;
+
+        cam.GetComponent<Camera>().Render();
+        Texture2D t = new Texture2D(Screen.width, Screen.height);
+        t.ReadPixels(new Rect(0,0, Screen.width, Screen.height), 0,0);
+        t.Apply();
+
+        RenderTexture.active = null;
+        cam.GetComponent<Camera>().targetTexture = null;
+
+        Byte[] bytes = t.EncodeToPNG();
+        Destroy(t);
+        System.IO.File.WriteAllBytes(filepath, bytes);
+
         yield return new WaitForSeconds(0.1f);
         ShowResultsMenu();
     }

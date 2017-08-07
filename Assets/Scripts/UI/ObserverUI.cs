@@ -125,6 +125,10 @@ public class ObserverUI : MonoBehaviour {
         followCar = !followCar;
     }
 
+    public void StopCameraFollowCar(){
+        followCar = false;
+    }
+
     public void EndTestPressed() {
         manager.EndTest("Observer Termination.");
     }
