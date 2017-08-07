@@ -9,11 +9,13 @@ public class SmallCityBuilder : MonoBehaviour {
 
     public Material footpath;
     public GameObject item;
+    public GameObject laserBlock;
 
     public Color buildingColour = Color.black;
     public Color roadColour = Color.white;
     public Color itemColour = Color.green;
     public Color startColour = Color.blue;
+    public Color laserColour = Color.cyan;
     public Color noDrawColor = new Color(1, 1, 0);
 
     private Color[] pixels;
@@ -28,6 +30,8 @@ public class SmallCityBuilder : MonoBehaviour {
         tempBuildings.transform.parent = transform;
         GameObject items = new GameObject("Items");
         items.transform.parent = transform;
+        GameObject lasers = new GameObject("Lasers");
+        lasers.transform.parent = transform;
 
         for(int i = 0; i < map.width; i++){
             for(int j = 0; j < map.height; j++){
@@ -38,6 +42,8 @@ public class SmallCityBuilder : MonoBehaviour {
                 } else if(ColorAt(i, j) == startColour) {
                     // The middle of this tile
                     startPosition = new Vector3(((i + 0.5f) * scale), 0, ((j + 0.5f) * scale));
+                } else if (ColorAt(i, j) == laserColour) {
+                    PlaceLaser(lasers.transform, i, j);
                 }
             }
         }
@@ -129,6 +135,13 @@ public class SmallCityBuilder : MonoBehaviour {
             block.AddComponent<MeshRenderer>().material = materials[pair.Key];
             block.transform.parent = parent.transform;
         }
+    }
+
+    private void PlaceLaser(Transform parent, int x, int y) {
+        GameObject laser = Instantiate(laserBlock);
+        laser.transform.position = new Vector3(x * scale + scale / 2f, scale * 0.5f, y * scale + scale / 2f);
+        laser.transform.parent = parent;
+        laser.transform.localScale = new Vector3(scale, scale, scale);
     }
 
 
