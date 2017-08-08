@@ -20,7 +20,6 @@ public class ObserverUI : MonoBehaviour {
     private const float ZOOM_MULTIPLIER_DEFAULT = 1;
 
     public Text consoleBox;
-    private ScrollRect scroll;
 
     private TestManager manager;
     public ObserverCameraController observerCam;
@@ -30,7 +29,6 @@ public class ObserverUI : MonoBehaviour {
     private float moveAccelerationTime = 0;
     private float zoomAcceleration = ZOOM_MULTIPLIER_DEFAULT;
     private float zoomAccelerationTime = 0;
-    private bool lockConsoleScrollbar = true;
 
     private bool locatorBeconToggle = false;
     private LocatorBecon becon;
@@ -41,7 +39,6 @@ public class ObserverUI : MonoBehaviour {
 
     void Start() {
         manager = FindObjectOfType<TestManager>();
-        scroll = GetComponentInChildren<ScrollRect>();
     }
 
     void FixedUpdate() {

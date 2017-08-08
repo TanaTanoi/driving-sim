@@ -66,7 +66,7 @@ public class Countdown : MonoBehaviour {
     }
 
     private IEnumerator ShrinkOverTime(float time) {
-        int startSize = text.fontSize;
+        int startSize = defaultFontSize;
         float threshold = shrinkSteps / 3f;
 
         for(int i = 0; i < shrinkSteps; i ++) {

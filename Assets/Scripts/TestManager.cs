@@ -77,7 +77,7 @@ public class TestManager : MonoBehaviour {
 
     void OnGUI() {
         // For Debugging only
-        // GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
+        //GUI.Label(new Rect(0, 0, Screen.width, Screen.height), output);
     }
 
     IEnumerator StartWhenReady() {
@@ -112,6 +112,9 @@ public class TestManager : MonoBehaviour {
     }
 
     private void SetupCar(int context) {
+        // Disable audio listener on the main cam
+        ObserverCameraController cam = GameObject.FindObjectOfType<ObserverCameraController>();
+        cam.GetComponent<AudioListener>().enabled = false;
         // Create car with correct context
         car = Instantiate(carPrefab);
         car.transform.position = city.GetStartPosition();
@@ -155,6 +158,8 @@ public class TestManager : MonoBehaviour {
         observerMenu.GetComponent<ObserverUI>().SetGoToResultsButtonActive(false);
         analytics.ClearTracking();
         if(car != null) {
+            ObserverCameraController cam = GameObject.FindObjectOfType<ObserverCameraController>();
+            cam.GetComponent<AudioListener>().enabled = true;
             Destroy(car);
         }
     }
