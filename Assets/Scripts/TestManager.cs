@@ -42,10 +42,7 @@ public class TestManager : MonoBehaviour {
     private string layoutName = "";
     private int contextID;
 
-    string output;
-    string stack;
-
-    void Start() {
+     void Start() {
         startMenu.gameObject.SetActive(true);
         resultsMenu.gameObject.SetActive(true);
         observerMenu.gameObject.SetActive(true);
@@ -53,9 +50,6 @@ public class TestManager : MonoBehaviour {
 
     // Sets up the test with analytics and a car, then starts it after a delay
     public void StartTest(int context, Texture2D layout) {
-
-        //Application.RegisterLogCallback(HandleLog); // for Debugging in build mode
-
         layoutName = layout.name;
         contextID = context;
 
@@ -68,11 +62,6 @@ public class TestManager : MonoBehaviour {
         SetupAnalytics();
 
         StartCoroutine(StartWhenReady());
-    }
-
-    void HandleLog(string logString, string stackTrace, LogType type) {
-        output += logString;
-        stack = stackTrace;
     }
 
     void OnGUI() {
